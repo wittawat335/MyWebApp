@@ -1,0 +1,75 @@
+﻿@using MyWebApp.Core.Utility;
+@using MyWebApp.Core.Model.ViewModels;
+@model LoginViewModel;
+<script src="~/lib/jquery/dist/jquery.js"></script>
+<script src="~/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/vendor/php-email-form/validate.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="~/js/pages/layout/custom.js"></script>
+<script src="~/js/pages/layout/validatetor.js"></script>
+<script src="~/js/pages/layout/sweetalertcustom.js"></script>
+<script>
+    var UserLogin = '@Html.IdFor(x => x.UserLogin)';
+    var Password = '@Html.IdFor(x => x.Password)';
+    function FormValidate() {
+        var msg = '';
+        $(':input[type="text"]').css("border-color", "");
+
+        if (setValidateById(UserLogin)) {
+            msg = 'Please enter UserLogin';
+        }
+        if (setValidateById(Password)) {
+            msg = 'Please enter password';
+        }
+      
+        return msg;
+    }
+
+    function processLogin() {
+        var msg = FormValidate();
+        if (msg != '') {
+            swalMessage('warning', msg);
+        }
+        else{
+            var url = '@Url.Content(Constants.urlAction.HomeLogin)';
+            var data = {
+                "UserLogin": $('#UserLogin').val(),
+                "Password": $('#Password').val()
+            };
+            $.post(url, data, function (response) {
+                if (response.status) {
+                    if (response.message == '@Constants.Msg.LoginDuplicate') {
+                        bootbox.confirm(response.message, function (response) {
+                            if (response) {
+                                Login();
+                            }
+                        });
+                    }
+                    else {
+                        Login();
+                    }
+                }
+                else {
+                    swalMessage('error', response.message)
+                }
+            });
+        }       
+    }
+
+    function Login() {
+        var url = '@Url.Content(Constants.urlAction.HomeCheckLogin)';
+        var data = {
+            "UserLogin": $('#UserLogin').val(),
+            "Password": $('#Password').val()
+        };
+        $.post(url, data, function (response) {
+            if (response.status) {
+                swalMessage('success', response.message);
+                window.location.href = response.url;
+            }
+            else {
+                swalMessage('error', response.message);
+            }
+        });
+    }
+</script>

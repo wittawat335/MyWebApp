@@ -1,0 +1,94 @@
+﻿@using MyWebApp.Core.DTO;
+@model List<ProgramDTO>
+@{
+    var menuLv1 = ((List<ProgramDTO>)Model)
+    .Where(x => x.PROG_LEVEL == 1 && x.PROG_STATUS == "A");
+    var menuLv2 = ((List<ProgramDTO>)Model)
+    .Where(x => x.PROG_LEVEL == 2 && x.PROG_STATUS == "A");
+    var menuLv3 = ((List<ProgramDTO>)Model)
+    .Where(x => x.PROG_LEVEL == 3 && x.PROG_STATUS == "A");
+}
+<aside id="sidebar" class="sidebar">
+    <ul class="sidebar-nav" id="sidebar-nav">
+        @foreach (var lv1 in menuLv1.OrderBy(x => x.PROG_ORDER)) //LV 1
+        {
+            <li class="nav-item">
+                @*Lv1 menu ไม่มี subMenu*@
+                @if (menuLv2
+               .Where(x => x.PROG_PARENT_CODE == lv1.PROG_CODE)
+               .Count() == 0)
+                {
+                    <a class="nav-link collapsed"
+                       href="@Url.Content("~/" + lv1.PROG_TARGET_URL ?? "#")">
+                        <i class="@lv1.PROG_ICON"></i>
+                        <span>@(lv1.PROG_NAME ?? "")</span>
+                    </a>
+                }
+                else @*Lv1 menu มี subMenu*@
+                {
+                    <a class="nav-link collapsed"
+                       data-bs-target="#@lv1.PROG_CODE"
+                       data-bs-toggle="collapse"
+                       href="#">
+                        <i class="@lv1.PROG_ICON"></i>
+                        <span>@(lv1.PROG_NAME ?? "")</span>
+                        <i class="bi bi-chevron-down ms-auto"></i>
+                    </a>
+                    @foreach (var lv2 in menuLv2
+                   .Where(x => x.PROG_PARENT_CODE == lv1.PROG_CODE)
+                   .OrderBy(x => x.PROG_ORDER))
+                    {
+                        <ul id="@lv2.PROG_PARENT_CODE"
+                            data-bs-parent="#sidebar-nav"
+                            class="nav-content collapse">
+
+                            @if (menuLv3.Where(x => x.PROG_PARENT_CODE == lv2.PROG_CODE).Count() > 0) @*Lv2 menu ไม่มี subMenu*@
+                            {
+                                <li class="nav-item">
+                                    <a class="nav-link collapsed"
+                                       data-bs-target="#@lv2.PROG_CODE"
+                                       data-bs-toggle="collapse"
+                                       href="#">
+                                        <i class="@lv2.PROG_ICON"
+                                           style="font-size:16px">
+                                        </i>
+                                        <span>@(lv2.PROG_NAME ?? "")</span>
+                                        <i class="bi bi-chevron-down ms-auto"
+                                           style="font-size:16px">
+                                        </i>
+                                    </a>
+                                </li>
+                                @foreach (var lv3 in menuLv3
+                               .Where(x => x.PROG_PARENT_CODE == lv2.PROG_CODE)
+                               .OrderBy(x => x.PROG_ORDER))
+                                {
+                                    <ul id="@lv3.PROG_PARENT_CODE"
+                                        class="nav-content collapse"
+                                        data-bs-parent="#@lv2.PROG_PARENT_CODE">
+                                        <li>
+                                            <a href="@Url.Content("~/" + lv3.PROG_TARGET_URL ?? "#")">
+                                                <i class="@lv3.PROG_ICON"
+                                                   style="font-size:16px"></i>
+                                                <span>@(lv3.PROG_NAME ?? "")</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                }
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a href="@Url.Content("~/" + lv2.PROG_TARGET_URL ?? "#")">
+                                        <i class="@lv2.PROG_ICON" style="font-size:16px"></i>
+                                        <span>@(lv2.PROG_NAME ?? "")</span>
+                                    </a>
+                                </li>
+                            }
+
+                        </ul>
+                    }
+                }
+            </li>
+        }
+    </ul>
+</aside>
