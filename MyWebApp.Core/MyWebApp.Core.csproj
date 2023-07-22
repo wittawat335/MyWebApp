@@ -17,4 +17,10 @@
     <PackageReference Include="System.DirectoryServices.Protocols" Version="7.0.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Domain\RepositoryContracts\" />
+    <Folder Include="DTO\" />
+    <Folder Include="Services\Contract\" />
+  </ItemGroup>
+
 </Project>
