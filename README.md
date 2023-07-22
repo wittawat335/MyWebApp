@@ -5,7 +5,7 @@
 - C#
 - Html
 - CSS
-- Jquery
+- JavaScript(Jquery)
 - Json
 # BackEnd
 - C#
