@@ -43,6 +43,8 @@ namespace MyWebApp.Web.Controllers
         }
         public IActionResult Login()
         {
+            ClaimsPrincipal claimUser = HttpContext.User;
+
             return View();
         }
         public async Task<IActionResult> Logout()

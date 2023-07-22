@@ -19,7 +19,6 @@ namespace MyWebApp.Core.Services
             _repository = repository;
         }
 
-       
         public async Task<bool> GetPermission(string userRole, string programCode, string actCode)
         {
             try

@@ -18,7 +18,6 @@ namespace MyWebApp.Web.Controllers
         {
             _service = service;
         }
-
         public IActionResult Index()
         {
             decimal xx = cm.CalculateMonth(1000, 

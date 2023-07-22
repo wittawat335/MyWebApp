@@ -1,0 +1,44 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@model RoleViewModel;
+<script>
+    var roleCode = '@Html.IdFor(x => x.role.ROLE_CODE)';
+    var roleName = '@Html.IdFor(x => x.role.ROLE_NAME)';
+    var dataLevel = '@Html.IdFor(x => x.role.ROLE_DATA_LEVEL)';
+    var roleStatus = '@Html.IdFor(x => x.role.ROLE_STATUS)';
+
+    $(document).ready(function () {
+        CheckAction();
+    });
+
+    function CheckAction() {
+        if ('@Model.action' == '@Constants.Action.View') {
+            SetReadOnlyByDiv('frmDetail', true);
+        }
+        else if ('@Model.action' == '@Constants.Action.Edit') {
+            SetReadOnly(roleCode, false);
+        }
+    }
+
+    function FormValidate() {
+        var msg = '';
+        $(':input[type="text"]').css("border-color", "");
+        $('#' + dataLevel).css("border-color", "")
+        $('#' + roleStatus).css("border-color", "")
+
+        if (setValidateById(roleCode)) {
+            msg = 'Please complete the information' + ' ' + 'roleCode';
+        }
+        if (setValidateById(roleName)) {
+            msg = 'Please complete the information' + ' ' + 'roleName';
+        }
+        if (setValidateById(dataLevel)) {
+            msg = 'Please complete the information' + ' ' + 'dataLevel';
+        }
+        if (setValidateById(roleStatus)) {
+            msg = 'Please complete the information' + ' ' + 'roleStatus';
+        }
+
+        return msg;
+    }
+</script>

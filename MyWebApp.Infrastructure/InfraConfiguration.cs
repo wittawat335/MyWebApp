@@ -15,15 +15,14 @@ namespace MyWebApp.Infrastructure
         {
             services.AddDbContext<NCLS_SITContext>(options =>
             {
-                options.UseSqlServer(configuration
-                    .GetConnectionString(Constants.ConnnectionString.SqlServer));
+                options.UseSqlServer(configuration.GetConnectionString(Constants.ConnnectionString.SqlServer));
             });
-            services.AddTransient(typeof(IGenericRepository<>),
-                typeof(GenericRepository<>));
+            services.AddTransient(typeof(IGenericRepository<>),typeof(GenericRepository<>));
             services.AddScoped<IProgramRepository, ProgramRepository>();
             services.AddScoped<IDashboardRepository, DashboardRepository>();
             services.AddScoped<ITodoListRepository, TodoListRepository>();
             services.AddScoped<IReceiveCarRepository, ReceiveCarRepository>();
+            services.AddScoped<IRoleRepository, RoleRepository>();
         }
     }
 }

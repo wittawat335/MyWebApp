@@ -1,0 +1,11 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@{
+    var common = new Common();
+}
+@model RoleViewModel
+<input type="text" name="Role.ROLE_CREATE_BY" value='@common.UserLogin' readonly="true" />
+<input type="datetime" name="Role.ROLE_CREATE_DATE" value='@common.SystemDate' readonly="true" />
+<input type="text" name="Role.ROLE_UPDATE_BY" value='@common.UserLogin' readonly="true" />
+<input type="datetime" name="Role.ROLE_UPDATE_DATE" value='@common.SystemDate' readonly="true" />
+<input type="text" name="mode" value='@Model.action' />

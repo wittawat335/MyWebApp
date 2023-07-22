@@ -21,8 +21,4 @@
     <ProjectReference Include="..\MyWebApp.Core\MyWebApp.Core.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Repositories\" />
-  </ItemGroup>
-
 </Project>

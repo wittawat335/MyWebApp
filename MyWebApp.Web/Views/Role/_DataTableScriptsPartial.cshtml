@@ -1,0 +1,127 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@model RoleViewModel;
+<script>
+    var permEdit;
+    var permView;
+    if ('@Model.permEdit' == 'True')
+        permEdit = true;
+    if ('@Model.permView' == 'True')
+        permView = true;
+
+    $(document).ready(function () {
+        ClearDataTable("dtResult");
+        GetList();
+    });
+    function GetList() {
+        $.ajax({
+            type: "POST",
+            url: '@Url.Content(Constants.urlAction.RoleSerach)',
+            dataType: "json",
+            data: {},
+            success: OnSuccess
+        })
+    }
+    function OnSuccess(response) {
+        console.log(response.value)
+        $('#dtResult').DataTable({
+            bDestroy: true,
+            bProcessing: true,
+            bLenghtChange: true,
+            lengthMenu: [[5, 10, 25, -1], [5, 10, 25, "All"]],
+            bfilter: true,
+            bSort: true,
+            bPaginate: true,
+            data: response.value,
+            columns: [
+                {
+                    data: 'ROLE_CODE',
+                    render: function (data, type, row, meta) {
+                        return row.rolE_CODE
+                    }
+                },
+                {
+                    data: 'ROLE_NAME',
+                    render: function (data, type, row, meta) {
+                        return row.rolE_NAME
+                    }
+                },
+                {
+                    data: 'ROLE_DATA_LEVEL',
+                    render: function (data, type, row, meta) {
+                        return row.rolE_DATA_LEVEL
+                    }
+                },
+          
+                {
+                    data: 'ROLE_UPDATE_BY',
+                    render: function (data, type, row, meta) {
+                        return row.rolE_UPDATE_BY
+                    }
+                },
+                {
+                    data: 'ROLE_UPDATE_DATE',
+                    render: function (data, type, row, meta) {
+                        if (row.rolE_UPDATE_DATE === null) return "";
+                        return moment(row.rolE_UPDATE_DATE).format('DD/MM/YYYY');
+                    }
+                },
+                {
+                    data: 'ROLE_STATUS',
+                    render: function (data, type, row, meta) {
+                        if (row.rolE_STATUS === 'A') {
+                            return '<span class="badge bg-success">'
+                                + '' + 'Active' + ''
+                                + '</span>'
+                        }
+                        else if (row.rolE_STATUS === 'I') {
+                            return '<span class="badge bg-dark">'
+                                + '' + 'InActive' + ''
+                                + '</span> '
+                        }
+                        else {
+                            return "";
+                        }
+                    }
+                },
+                {
+                    data: 'null',
+                    render: function (data, type, row, meta) {
+                        if (permView) {
+                            return '<a class="btn btn-info ms-4" onclick=PopupDetail("' + row.rolE_CODE + '","View");>'
+                                + '<i class="bi bi-search"></i></a>'
+                        }
+                    }
+                },
+                {
+                    data: 'null',
+                    render: function (data, type, row, meta) {
+                        if (permEdit) {
+                            return '<a class="btn btn-warning ms-3" onclick=PopupDetail("' + row.rolE_CODE + '","Edit");>'
+                                + '<i class="bi bi-pencil-fill"></i></a>'                
+                        }
+                    }
+                },
+                {
+                    data: 'null',
+                    render: function (data, type, row, meta) {
+                        if (permView && permEdit) {
+                            return '<a class="btn btn-secondary ms-5" onclick=PopupDetailPermission("' + row.rolE_CODE + '","' + row.rolE_NAME + '","@Constants.Action.Edit");>'
+                                + '<i class="bi bi-card-list"></a>'
+                        }
+                    }
+                }
+            ]
+        });
+    }
+    function PopupDetail(code, action) {
+        var data = { "code": code, "action": action };
+        modalPOST(action + " " + "Role", "Role", "_Detail", data, 50);
+    };
+    function PopupDetailPermission(code, name, action) {
+        var data = { "code": code, "action": action };
+        modalPOST(action + " " + name, "Role", "_DetailsPermission", data, 50);
+    };
+</script>
+
+

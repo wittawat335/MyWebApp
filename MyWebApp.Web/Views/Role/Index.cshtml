@@ -1,0 +1,75 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@model RoleViewModel;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="pagetitle">
+    <h1>Role</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">System Configuration</li>
+            <li class="breadcrumb-item">Security Management</li>
+            <li class="breadcrumb-item active">Role</li>
+        </ol>
+    </nav>
+</div>
+<div class="row" id="dvTable">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-11">
+                        <h5 class="card-title ">Search Result</h5>
+                    </div>
+                    <div class="col-md-1 float-end mt-3">
+                        <a class="btn btn-success"
+                           onclick=PopupDetail('',"@Constants.Action.New")>
+                            <i class="bi bi-plus-lg me-1"></i>
+                            @Constants.Action.New
+                        </a>
+                    </div>
+                </div>
+                <table id="dtResult" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Code</th>
+                            <th scope="col">Role</th>
+                            <th scope="col">Data Level</th>
+                            <th scope="col">Update By</th>
+                            <th scope="col">Update Date</th>
+                            <th scope="col" width="5%">Status</th>
+                            @if (Model.permView)
+                            {
+                                <th scope="col" class="text-center">
+                                    View
+                                </th>
+                            }
+                            @if (Model.permEdit)
+                            {
+                                <th scope="col" class="text-center">
+                                   Edit
+                                </th>
+                            }
+                            @if (Model.permEdit || Model.permView)
+                            {
+                                <th scope="col" class="text-center">Permission</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody id="table_Data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_DataTableScriptsPartial", Model);
+    }
+}
+

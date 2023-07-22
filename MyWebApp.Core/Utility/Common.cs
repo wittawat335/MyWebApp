@@ -534,6 +534,35 @@ namespace MyWebApp.Core.Utility
 
 
         #endregion
+        public List<ddlValuse> GetListDataLevel()
+        {
+            List<ddlValuse> list = new List<ddlValuse>();
+            ddlValuse item = new ddlValuse();
+            try
+            {
+
+                item.CODE = "1";
+                item.TEXT = "Owner";
+                list.Add(item);
+
+                item = new ddlValuse();
+                item.CODE = "2";
+                item.TEXT = "Role";
+                list.Add(item);
+
+                item = new ddlValuse();
+                item.CODE = "3";
+                item.TEXT = "All";
+                list.Add(item);
+                return list.ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
         public List<ddlValuse> GetListStatus()
         {
             List<ddlValuse> list = new List<ddlValuse>();

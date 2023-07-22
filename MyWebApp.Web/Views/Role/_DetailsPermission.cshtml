@@ -1,0 +1,66 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@model PermissionViewModel;
+<div>
+    <div class="row">
+        <div id="PermissionDetails"></div>
+    </div>
+
+    <div class="row">
+        <hr />
+        <div class="col-md-12">
+            <div class="pull-right">
+                @if (Model.permEdit || Model.permAdd)
+                {
+                    <button id="btnSave"
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="Save('frmDetail','@Url.Content(Constants.urlAction.RoleSave)')">
+                        Save
+                    </button>
+                }
+                <button id="btnClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<style>
+    .modal {
+        --bs-modal-width: 50%;
+    }
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.15/jstree.min.js" ></script>
+<script>
+    $(function(){
+        getPermissionData();
+    })
+    function getPermissionData() {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: '@Url.Content(Constants.urlAction.RoleSearchPermission)',
+            data: { code: '@Model.RoleCode' },
+            success: function (data) {
+                buildTree(data);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            }
+        });
+    };
+    function buildTree(json) {
+        $('#PermissionDetails').jstree({
+            'plugins': ["checkbox", "types"],
+            'core': { "themes": { "responsive": false }, 'data': json },
+            "types": {
+                "default": { "icon": "fa fa-folder icon-state-warning icon-lg" },
+                "file": { "icon": "fa fa-file icon-state-warning icon-lg" }
+            }
+        });
+    };
+
+</script>
+  

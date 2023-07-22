@@ -1,0 +1,69 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@{
+    var common = new Common();
+}
+@model RoleViewModel
+<form id="frmDetail" role="form" method="post">
+    <div class="form-group">
+        <label asp-for="role.ROLE_CODE" class="form-label"></label>
+        <input asp-for="role.ROLE_CODE"
+               class="form-control"
+               type="text"
+               maxlength="20" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="role.ROLE_NAME" class="form-label"></label>
+        <input asp-for="role.ROLE_NAME"
+               class="form-control"
+               type="text"
+               maxlength="20" />
+    </div>
+    <div class="form-group mt-2 mb-3">
+        <label asp-for="role.ROLE_DATA_LEVEL" class="form-label"></label>
+        <select asp-for="role.ROLE_DATA_LEVEL"
+                class="form-control"
+                asp-items="@(new SelectList(common.GetListDataLevel(), Constants.StatusListDDl.Code, Constants.StatusListDDl.Text))">
+        </select>
+    </div>
+    <div class="form-group mt-2 mb-3">
+        <label asp-for="role.ROLE_STATUS"
+               class="form-label">
+        </label>
+        <select asp-for="role.ROLE_STATUS"
+                class="form-control"
+                asp-items="@(new SelectList(common.GetListStatus(), Constants.StatusListDDl.Code, Constants.StatusListDDl.Text))">
+        </select>
+    </div>
+    <div class="row">
+        <hr>
+        <div class="col-md-12">
+            <div class="float-end">
+                <button id="btnClose" type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    cancel
+                </button>
+                @if (Model.permAdd || Model.permEdit)
+                {
+                    if (Model.action == Constants.Action.New || Model.action == Constants.Action.Edit)
+                    {
+                        <button id="btnSave"
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="Save('frmDetail','@Url.Content(Constants.urlAction.RoleSave)')">
+                            Save
+                        </button>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+    <div style="display: none">
+        @{
+            await Html.RenderPartialAsync("_HiddenValue", Model);
+        }
+    </div>
+</form>
+
+@{
+    await Html.RenderPartialAsync("_DetailScriptsPartial", Model);
+}

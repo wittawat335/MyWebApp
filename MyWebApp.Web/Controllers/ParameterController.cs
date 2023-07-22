@@ -22,7 +22,7 @@ namespace MyWebApp.Web.Controllers
             _permissionService = permissionService;
         }
 
-        public IActionResult IndexAsync()
+        public IActionResult Index()
         {                      
             return View();
         }
