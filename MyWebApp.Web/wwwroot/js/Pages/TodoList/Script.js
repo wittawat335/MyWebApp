@@ -2,6 +2,7 @@
     setSelect2();
     GetList();
     setDatePicker();
+    ClearDataTable('dtResult');
 });
 function GetList() {
     $.ajax({

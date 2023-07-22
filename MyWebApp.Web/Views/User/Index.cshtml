@@ -4,11 +4,11 @@
 }
 
 <div class="pagetitle">
-    <h1>Master Information</h1>
+    <h1>User</h1>
     <nav>
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="index.html">Home</a></li>
-            <li class="breadcrumb-item">Master Information</li>
+            <li class="breadcrumb-item">Security Management</li>
             <li class="breadcrumb-item active">User</li>
         </ol>
     </nav>
@@ -16,7 +16,7 @@
 
 <div class="card">
     <div class="card-body">
-        <h5 class="card-title">Search Master</h5>
+        <h5 class="card-title">Search</h5>
         <form method="post" class="row g-3">
             <div class="col-md-6">
                 <label for="txtCode" class="form-label">First Name</label>
@@ -43,7 +43,7 @@
                         class="btn btn-primary">
                     Search
                 </button>
-                <button type="reset" class="btn btn-secondary">
+                <button type="reset" class="btn btn-secondary" onclick="ClearDataTable('dtResult')">
                     Reset
                 </button>
             </div>
