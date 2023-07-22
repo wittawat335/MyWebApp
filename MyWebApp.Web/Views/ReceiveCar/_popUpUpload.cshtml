@@ -1,0 +1,33 @@
+﻿<div class="card">
+    <div class="card-body">
+        <form>
+            <div class="row mx-auto mt-3" style="width:700px;">
+                <label for="inputNumber" class="col-sm-2 col-form-label">File Upload</label>
+                <div class="col-sm-10">
+                    <input class="form-control" type="file" id="formFile" accept=".xls,.xlsx">
+                </div>
+            </div>
+        </form>
+        <table id="tblMain" class="table table-bordered table-hover mt-3">
+            <thead></thead>
+            <tbody style="text-align: left"></tbody>
+        </table>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <hr />
+        <div class="float-end">
+            <a class="btn btn-secondary" data-bs-dismiss="modal">Close</a>
+            <button id="btnSave" class="btn btn-primary">Save</button>
+        </div>
+    </div>
+</div>
+<style>
+    .modal {
+        --bs-modal-width: 80%;
+    }
+</style>
+@{
+    await Html.RenderPartialAsync("_ImportExcelPartialScript");
+}

@@ -1,0 +1,12 @@
+﻿@using MyWebApp.Core.Model.ViewModels.User;
+@using MyWebApp.Core.Utility;
+@{
+    var common = new Common();
+}
+@model UserViewModel;
+<input type="text" name="userDTO.USER_LOGIN" value='@Model.userDTO.USER_LOGIN' />
+<input type="text" name="userDTO.USER_CREATE_BY" value='@common.UserLogin' />
+<input type="datetime" name="userDTO.USER_CREATE_DATE" value='@common.SystemDate' />
+<input type="text" name="userDTO.USER_UPDATE_BY" value='@common.UserLogin' />
+<input type="datetime" name="userDTO.USER_UPDATE_DATE" value='@common.SystemDate' />
+<input type="text" name="action" value='@Model.action' />

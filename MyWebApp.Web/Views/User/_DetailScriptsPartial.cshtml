@@ -1,0 +1,39 @@
+﻿@using MyWebApp.Core.Model.ViewModels.User;
+@using MyWebApp.Core.Utility;
+@model UserViewModel;
+<script>
+    var userLogin = '@Html.IdFor(x => x.userDTO.USER_LOGIN)';
+    var password = '@Html.IdFor(x => x.userDTO.USER_PASSWORD)';
+    var firstName = '@Html.IdFor(x => x.userDTO.USER_FIRST_NAME)';
+    var LastName = '@Html.IdFor(x => x.userDTO.USER_LAST_NAME)';
+    $(document).ready(function () {
+        CheckAction();
+    });
+
+    function CheckAction() {
+        if ('@Model.action' == '@Constants.Action.View') {
+            SetReadOnlyByDiv('frmDetail', true);
+        }
+        else if ('@Model.action' == '@Constants.Action.Edit') {
+            SetReadOnly(userLogin, false);
+        }
+    }
+
+    function FormValidate() {
+        var msg = '';
+        $(':input[type="text"]').css("border-color", "");
+
+        if (setValidateById(userLogin)) {
+            msg = 'Please complete the information' + ' ' + 'userLogin';
+        }
+        if (setValidateById(password)) {
+            msg = 'Please complete the information' + ' ' + 'password';
+        }
+        if (setValidateById(firstName)) {
+            msg = 'Please complete the information' + ' ' + 'firstName';
+        }
+    
+
+        return msg;
+    }
+</script>

@@ -1,0 +1,118 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Dashboard;
+@model List<Charts>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card">
+    <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+            </li>
+            <li><a class="dropdown-item" href="#">Today</a></li>
+            <li><a class="dropdown-item" href="#">This Month</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Repo <span>/Today</span></h5>
+        <div class="chart">
+            <canvas id="doughnutchart2"></canvas>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    var barCanvas = document.getElementById("doughnutchart2");
+
+    var RE01value = [];
+    var RE02value = [];
+    var RE03value = [];
+    var RE04value = [];
+
+    @if (Model.Count > 0)
+    {
+        foreach (var item in Model.Where(x => x.id == "RE01"))
+        {
+            @:RE01value.push(@item.value);
+        }
+        foreach (var item in Model.Where(x => x.id == "RE02"))
+        {
+            @:RE02value.push(@item.value);
+        }
+        foreach (var item in Model.Where(x => x.id == "RE03"))
+        {
+            @:RE03value.push(@item.value);
+        }
+        foreach (var item in Model.Where(x => x.id == "RE04"))
+        {
+            @:RE04value.push(@item.value);
+        }
+    }
+
+
+            var re01 = {
+        label: "กำลังดำเนินการยึด",
+        data: RE01value,
+        backgroundColor: 'rgb(255, 99, 132)',
+        borderWidth: 0,
+        lineTension: 0,
+    };
+
+    var re02 = {
+        label: 'ยึดรถสำเร็จ',
+        data: RE02value,
+        backgroundColor: 'rgb(54, 162, 235)',
+        borderWidth: 0,
+    };
+
+    var re03 = {
+        label: 'ชำระค่างวดสำเร็จ',
+        data: RE03value,
+        backgroundColor: 'rgb(157, 230, 41)',
+        borderWidth: 0,
+    };
+
+    var re04 = {
+        label: 'ส่งข้อมูลให้ RPS',
+        data: RE04value,
+        backgroundColor: 'rgb(41, 224, 230)',
+        borderWidth: 0,
+    };
+
+
+    var datasetvalues = {
+        //labels: ["กำลังดำเนินการยึด", "ยึดรถสำเร็จ", "ชำระค่างวดสำเร็จ", "ส่งข้อมูลให้ RPS"],
+        datasets: [re01, re02, re03, re04]
+    };
+
+    var chartOptions = {
+        scales: {
+            xAxes: [{
+                barPercentage: 1,//Percent (0-1) of the available width each bar should
+                categoryPercentage: 0.6,//Percent (0-1) of the available width each category
+
+            }],
+            yAxes: [{
+                barPercentage: 1,
+                categoryPercentage: 0.6,
+                ticks: {
+                    beginAtZero: true
+                }
+            }],
+        }
+    };
+
+    var barChart = new Chart(barCanvas, {
+        type: 'bar',
+        data: datasetvalues,
+        options: chartOptions
+    });
+
+</script>
+

@@ -1,0 +1,66 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+<div class="pagetitle">
+    <h1>Program</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="index.html">Home</a>
+            </li>
+            <li class="breadcrumb-item active">Program</li>
+        </ol>
+    </nav>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="card-title ">Search Result</h5>
+                    </div>
+                </div>
+                <table id="dtResult" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col"
+                                style="text-align:center">Code</th>
+                            <th scope="col"
+                                style="text-align:center">Name</th>
+                            <th scope="col"
+                                style="text-align:center">Level</th>
+                            <th scope="col"
+                                style="text-align:center" nowarp>
+                                Parent Code
+                            </th>
+                            <th scope="col"
+                                style="text-align:center">Target Url</th>
+                            <th scope="col"
+                                style="text-align:center">Order</th>
+                            <th scope="col"
+                                style="text-align:center">Icon</th>
+                            <th scope="col"
+                                style="text-align:center" nowrap>
+                                Status
+                            </th>
+                            <th scope="col" class="text-center">
+                                <a class="btn btn-success me-2"
+                                   onclick=PopupDetail('',"New")>
+                                    <i class="bi bi-plus-lg"></i>
+                                    New
+                                </a>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_Data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/js/pages/program/datatablescript.js"></script>
+}
+

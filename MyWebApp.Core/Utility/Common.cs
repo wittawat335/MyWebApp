@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using MyWebApp.Core.Model.ViewModels;
 using MyWebApp.Core.Model.ViewModels.TodoList;
 using Newtonsoft.Json;
 using System.ComponentModel;
@@ -728,6 +729,31 @@ namespace MyWebApp.Core.Utility
         {
             public string? CODE { get; set; }
             public string? TEXT { get; set; }
+        }
+
+        public List<StudentMarkDetails> GetStudentMarkList()
+        {
+            var studentmarkList = new List<StudentMarkDetails>()
+            {
+                new StudentMarkDetails() { id = 1, name = "John", Physics = 62,Chemistry=78,Biology=84,Mathematics=96 },
+                new StudentMarkDetails() { id = 2, name = "Mary", Physics = 96,Chemistry=78,Biology=69,Mathematics=88 },
+                new StudentMarkDetails() { id = 3, name = "Asha", Physics = 49,Chemistry=85,Biology=63,Mathematics=77 },
+                new StudentMarkDetails() { id = 4, name = "Emily", Physics = 85,Chemistry=56,Biology=78,Mathematics=55 },
+                new StudentMarkDetails() { id = 5, name = "Bonnie", Physics = 74,Chemistry=55,Biology=36,Mathematics=69 },
+            };
+            return studentmarkList;
+        }
+        public List<StudentScoreDetails> GetStudentScoreDetails()
+        {
+            var studentscoreList = new List<StudentScoreDetails>()
+            {
+                new StudentScoreDetails() { id = 1, name = "John", score = 62},
+                new StudentScoreDetails() { id = 2, name = "Mary", score = 96 },
+                new StudentScoreDetails() { id = 3, name = "Asha", score = 49 },
+                new StudentScoreDetails() { id = 4, name = "Emily", score = 85 },
+                new StudentScoreDetails() { id = 5, name = "Bonnie", score = 74},
+            };
+            return studentscoreList;
         }
     }
 }

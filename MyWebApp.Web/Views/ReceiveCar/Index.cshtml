@@ -1,0 +1,113 @@
+﻿@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="pagetitle">
+    <h1>Receive Car</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">Receive Car</li>
+            <li class="breadcrumb-item active">Index</li>
+        </ol>
+    </nav>
+</div>
+<div class="card">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-6">
+                <h5 class="card-title">Search</h5>
+            </div>
+            <div class="col-md-6">
+                <div class="float-end mt-3">
+                    <a class="btn btn-primary rounded-pill"
+                       onclick="PopupUpload()">
+                        <i class="bi bi-file-arrow-up"></i>&nbsp;
+                        Upload Tracking Note
+                    </a>
+                    <button id="btnDownloadExcel"
+                            type="button"
+                            class="btn btn-secondary rounded-pill"
+                            onclick="GenerateAndDownloadExcel()">
+                        Template Download
+                    </button>
+                </div>
+            </div>
+        </div>
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label for="txtCoded" class="form-label">Master Code</label>
+                <input type="text" class="form-control" id="txtCoded">
+            </div>
+            <div class="col-md-6">
+                <label for="txtCode" class="form-label">Master Code</label>
+                <input type="text" class="form-control" id="txtCode">
+            </div>
+            <div class="col-md-6">
+                <label for="txtNameTH" class="form-label">Name (Thai)</label>
+                <input type="text" class="form-control" id="txtNameTH">
+            </div>
+            <div class="col-md-6">
+                <label for="txtNameEN" class="form-label">Name (English)</label>
+                <input type="text" class="form-control" id="txtNameEN">
+            </div>
+            <div class="col-md-6">
+                <label for="ddlStatus" class="form-label">Status</label>
+                <select class="form-control" id="ddlStatus">
+                    <option value="">Please Select </option>
+                    <option value="A">Active</option>
+                    <option value="I">InActive</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="button" id="btnSearch" onclick="GetList()"
+                        class="btn btn-primary">
+                    Search
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="card-title ">Search Result</h5>
+                    </div>
+                </div>
+                <table id="dtResult" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Tracking</th>
+                            <th scope="col">Ref No</th>
+                            <th scope="col">ContractNo</th>
+                            <th scope="col">Citizen ID</th>
+                            <th scope="col">Borrower Name</th>
+                            <th scope="col">Admin</th>
+                            <th scope="col">Legal OA</th>
+                            <th scope="col">Assign Date</th>
+                            <th scope="col">Repossessed Status</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_Data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/pages/receivecar/datatable.js"></script>
+    @{
+        await Html.RenderPartialAsync("_ExportExcelPartialScript");
+    }
+}
+
+

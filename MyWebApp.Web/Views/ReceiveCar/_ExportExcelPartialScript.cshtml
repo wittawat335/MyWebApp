@@ -1,0 +1,26 @@
+﻿@using MyWebApp.Core.Utility;
+
+<script>
+    function GenerateAndDownloadExcel() {
+        var StudentId = 0,
+            name = "";
+        $.ajax({
+            url: "@Url.Content(Constants.urlAction.ImportExcelCar)",
+            //data: { 'Id': groupId },
+            type: 'GET',
+
+            success: function (result) {
+                ExcelFromBase64("Excel.xlsx", result);
+            },
+            error: function (result) { }
+        });
+    }
+    function ExcelFromBase64(fileName, bytesBase64) {
+        var link = document.createElement('a');
+        link.download = fileName;
+        link.href = 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + bytesBase64;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+</script>

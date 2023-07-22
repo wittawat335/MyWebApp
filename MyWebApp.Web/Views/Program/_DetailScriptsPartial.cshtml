@@ -1,0 +1,45 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Program;
+@using MyWebApp.Core.Utility;
+@model ProgramViewModel
+<script>
+    var programCode = '@Html.IdFor(x => x.program.PROG_CODE)';
+    var programName = '@Html.IdFor(x => x.program.PROG_NAME)';
+    var programLevel = '@Html.IdFor(x => x.program.PROG_LEVEL)';
+    var programParentCode = '@Html.IdFor(x => x.program.PROG_PARENT_CODE)';
+    var programUrl = '@Html.IdFor(x => x.program.PROG_TARGET_URL)';
+    var programOrder = '@Html.IdFor(x => x.program.PROG_ORDER)';
+    var programIcon = '@Html.IdFor(x => x.program.PROG_ICON)';
+
+    $(function () {
+        CheckAction();
+    });
+
+    function CheckAction() {
+        if ('@Model.action' == '@Constants.Action.View') {
+            SetReadOnlyByDiv('frmDetail', true);
+        }
+        else if ('@Model.action' == '@Constants.Action.Edit') {
+            SetReadOnly(programCode, false);
+        }
+    }
+
+    function FormValidate() {
+        var msg = '';
+        $(':input[type="text"]').css("border-color", "");
+
+        if (setValidateById(programCode)) {
+            msg = 'Please complete the information' + ' ' + 'programCode';
+        }
+        if (setValidateById(programName)) {
+            msg = 'Please complete the information' + ' ' + 'programName';
+        }
+        if (setValidateById(programLevel)) {
+            msg = 'Please complete the information' + ' ' + 'programLevel';
+        }
+        if (setValidateById(programUrl)) {
+            msg = 'Please complete the information' + ' ' + 'programUrl';
+        }
+
+        return msg;
+    }
+</script>

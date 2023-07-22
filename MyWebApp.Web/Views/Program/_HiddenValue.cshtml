@@ -1,0 +1,25 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Program;
+@using MyWebApp.Core.Utility;
+@{
+    var common = new Common();
+}
+@model ProgramViewModel
+
+<input type="text"
+       name="program.PROG_CODE"
+       value='@Model.program.PROG_CODE' />
+<input type="text"
+       name="program.PROG_CREATE_BY"
+       value='@common.UserLogin' />
+<input type="datetime"
+       name="program.PROG_CREATE_DATE"
+       value='@common.SystemDate' />
+<input type="text"
+       name="program.PROG_UPDATE_BY"
+       value='@common.UserLogin' />
+<input type="datetime"
+       name="program.PROG_UPDATE_DATE"
+       value='@common.SystemDate' />
+<input type="text"
+       name="action"
+       value='@Model.action' />

@@ -1,0 +1,163 @@
+﻿@using MyWebApp.Core.Model.ViewModels.TodoList;
+@using MyWebApp.Core.Utility;
+@model TodoListViewModel
+
+<div class="pagetitle">
+    <h1>Todo List</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item active">TodoList</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Search</h5>
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label for="txtCode"
+                       class="form-label">
+                    Ref No
+                </label>
+                <select class="form-control"
+                        id="ddlRefNo"
+                        name="ddlRefNo">
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="ddlCustCode"
+                       class="form-label">
+                    Borrower Name
+                </label>
+                <select class="form-control"
+                        id="ddlCustCode"
+                        name="ddlCustCode">
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="ddlAdmin"
+                       class="form-label">
+                    Admin
+                </label>
+                <select class="form-control"
+                        id="ddlAdmin"
+                        name="ddlAdmin">
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="ddlOa"
+                       class="form-label">
+                    OA 
+                </label>
+                <select class="form-control"
+                        id="ddlOa"
+                        name="ddlOa">
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="dpAssignDateFrom"
+                       class="col-form-label">
+                    Assign Date From
+                </label>
+                <div class="input-group date" data-date-format="dd/mm/yyyy">
+                    <input type="text" 
+                           class="form-control datepicker"
+                           id="dpAssignDateFrom"
+                           name="dpAssignDateFrom">
+                    <span class="input-group-append">
+                        <span class="input-group-text bg-white d-block">
+                            <i class="bi bi-calendar"></i>
+                        </span>
+                    </span>
+                </div>              
+            </div>
+            <div class="col-md-6">
+                <label for="dpAssignDateTo"
+                       class="col-form-label">
+                    Assign Date To
+                </label>
+                <div class="input-group date" data-date-format="dd/mm/yyyy">
+                    <input type="text" 
+                           class="form-control datepicker"
+                           id="dpAssignDateTo"
+                           name="dpAssignDateTo">
+                    <span class="input-group-append">
+                        <span class="input-group-text bg-white d-block">
+                            <i class="bi bi-calendar"></i>
+                        </span>
+                    </span>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label for="ddlCustCode"
+                       class="form-label">
+                    Legal Case
+                </label>
+                <select class="form-control"
+                        id="ddlLegalCode"
+                        name="ddlLegalCode">
+                </select>
+            </div>
+            <div class="col-md-6">
+                <label for="ddlStatus" class="form-label">Status</label>
+                <select class="form-control" id="ddlStatus">
+                    <option value="">Please Select </option>
+                    <option value="A">Active</option>
+                    <option value="I">InActive</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="button" id="btnSearch" onclick="GetList()"
+                        class="btn btn-primary">
+                    Search
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="card-title ">Search Result</h5>
+                    </div>
+                </div>
+                <table id="dtResult" class="table table-hover">
+                    <thead style="text-align: center">
+                        <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Ref No.</th>
+                            <th scope="col">Contract No/Cheque No</th>
+                            <th scope="col">Borrower Name</th>
+                            <th scope="col">Legal Case</th>
+                            <th scope="col">Brand</th>
+                            <th scope="col">Model</th>
+                            <th scope="col">Plate No</th>
+                            <th scope="col">Outstanding Balance</th>
+                            <th scope="col">Overdue Days</th>
+                            <th scope="col">Assign Date(Admin)</th>
+                            <th scope="col">Handle Day</th>
+                            <th scope="col">Repo Status</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_Data"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    @{
+        await Html.RenderPartialAsync("_DateScriptsPartial");
+    }
+    <script src="~/js/pages/todolist/select2script.js"></script>
+    <script src="~/js/pages/todolist/script.js"></script>
+}

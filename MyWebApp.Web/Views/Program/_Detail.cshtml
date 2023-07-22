@@ -1,0 +1,96 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Program;
+@using MyWebApp.Core.Utility;
+@{
+    var cm = new Common();
+}
+@model ProgramViewModel;
+<form id="frmDetail">
+    <div class="form-group">
+        <label asp-for="program.PROG_CODE" class="form-label"></label>
+        <input asp-for="program.PROG_CODE"
+               class="form-control"
+               type="text" maxlength="20" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="program.PROG_NAME" class="form-label"></label>
+        <input asp-for="program.PROG_NAME"
+               class="form-control"
+               type="text"
+               maxlength="100" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="program.PROG_LEVEL" class="form-label"></label>
+        <input asp-for="program.PROG_LEVEL"
+               class="form-control"
+               type="text"
+               maxlength="100" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="program.PROG_PARENT_CODE"
+               class="form-label">
+        </label>
+        <input asp-for="program.PROG_PARENT_CODE"
+               class="form-control"
+               type="text"
+               maxlength="100" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="program.PROG_TARGET_URL"
+               class="form-label">
+        </label>
+        <input asp-for="program.PROG_TARGET_URL"
+               class="form-control"
+               type="text"
+               maxlength="100" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="program.PROG_ORDER" class="form-label"></label>
+        <input asp-for="program.PROG_ORDER"
+               class="form-control"
+               type="text"
+               maxlength="100" />
+    </div>
+    <div class="form-group mt-2">
+        <label asp-for="program.PROG_ICON" class="form-label"></label>
+        <input asp-for="program.PROG_ICON"
+               class="form-control"
+               type="text"
+               maxlength="100" />
+    </div>
+    <div class="form-group mt-2 mb-3">
+        <label asp-for="program.PROG_STATUS" class="form-label"></label>
+        <select asp-for="program.PROG_STATUS"
+                class="form-control"
+                asp-items="@(new SelectList
+                (cm.GetListStatus(), Constants.StatusListDDl.Code, Constants.StatusListDDl.Text))">
+        </select>
+    </div>
+    <div class="row">
+        <hr>
+        <div class="col-md-12">
+            <div class="float-end">
+                <button id="btnClose" type="button"
+                        class="btn btn-secondary" data-bs-dismiss="modal">
+                    Close
+                </button>
+                @if (Model.action != Constants.Action.View)
+                {
+                    <button id="btnSave"
+                            type="button"
+                            class="btn btn-primary"
+                            onclick="Save('frmDetail', '@Url.Content(Constants.urlAction.ProgramSave)')">
+                        Save
+                    </button>
+                }
+            </div>
+        </div>
+    </div>
+    <div style="display: none">
+        @{
+            await Html.RenderPartialAsync("_HiddenValue", Model);
+        }
+    </div>
+</form>
+@{
+    await Html.RenderPartialAsync("_DetailScriptsPartial", Model);
+}

@@ -1,0 +1,22 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Master;
+@using MyWebApp.Core.Utility;
+@{
+    var common = new Common();
+}
+@model MasterViewModel
+<input type="text"
+       name="masterDTO.MASTER_CODE"
+       value='@Model.masterDTO.MASTER_CODE' />
+<input type="text"
+       name="masterDTO.MASTER_CREATE_BY"
+       value='@common.UserLogin' />
+<input type="datetime"
+       name="masterDTO.MASTER_CREATE_DATE"
+       value='@common.SystemDate' />
+<input type="text"
+       name="masterDTO.MASTER_UPDATE_BY"
+       value='@common.UserLogin' />
+<input type="datetime"
+       name="masterDTO.MASTER_UPDATE_DATE"
+       value='@common.SystemDate' />
+<input type="text" name="action" value='@Model.action' />

@@ -43,10 +43,6 @@ namespace MyWebApp.Web.Controllers
         }
         public IActionResult Login()
         {
-            ClaimsPrincipal claimUser = HttpContext.User;
-            if (claimUser.Identity.IsAuthenticated)
-                return RedirectToAction("Index", "Home");
-
             return View();
         }
         public async Task<IActionResult> Logout()

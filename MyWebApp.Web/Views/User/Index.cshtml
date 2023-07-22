@@ -1,0 +1,94 @@
+﻿@using MyWebApp.Core.Utility;
+@{
+    ViewData["Title"] = "Index";
+}
+
+<div class="pagetitle">
+    <h1>Master Information</h1>
+    <nav>
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+            <li class="breadcrumb-item">Master Information</li>
+            <li class="breadcrumb-item active">User</li>
+        </ol>
+    </nav>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Search Master</h5>
+        <form method="post" class="row g-3">
+            <div class="col-md-6">
+                <label for="txtCode" class="form-label">First Name</label>
+                <input type="text" class="form-control" id="txtFirstName">
+            </div>
+            <div class="col-md-6">
+                <label for="txtNameTH" class="form-label">Last Name</label>
+                <input type="text" class="form-control" id="txtLastName">
+            </div>
+            <div class="col-md-6">
+                <label for="txtNameEN" class="form-label">Login</label>
+                <input type="text" class="form-control" id="txtLogin">
+            </div>
+            <div class="col-md-6">
+                <label for="ddlStatus" class="form-label">Status</label>
+                <select class="form-control" id="ddlStatus">
+                    <option value="">Please Select </option>
+                    <option value="A">Active</option>
+                    <option value="I">InActive</option>
+                </select>
+            </div>
+            <div class="text-center">
+                <button type="button" id="btnSearch" onclick="GetList()"
+                        class="btn btn-primary">
+                    Search
+                </button>
+                <button type="reset" class="btn btn-secondary">
+                    Reset
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-10">
+                        <h5 class="card-title ">Search Result</h5>
+                    </div>
+                </div>
+                <table id="dtResult" class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Login</th>
+                            <th scope="col">First Name</th>
+                            <th scope="col">Last Name</th>
+                            <th scope="col">Update By</th>
+                            <th scope="col">Update Date</th>
+                            <th scope="col" width="5%">Status</th>
+                            <th scope="col" width="17%" class="text-center">
+                                <button type="button" class="btn btn-success"
+                                        onclick="PopupDetail('','@Constants.Action.New')">
+                                    New 
+                                </button>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="table_Data">
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/pages/user/script.js"></script>
+}
+
+
+
+
+

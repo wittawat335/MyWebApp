@@ -1,0 +1,43 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Master;
+@using MyWebApp.Core.Utility;
+@model MasterViewModel;
+<script>
+    var masterCode = '@Html.IdFor(x => x.masterDTO.MASTER_CODE)';
+    var masterType = '@Html.IdFor(x => x.masterDTO.MASTER_TYPE)';
+    var masterNameThai = '@Html.IdFor(x => x.masterDTO.MASTER_NAME_TH)';
+    var masterNameEng = '@Html.IdFor(x => x.masterDTO.MASTER_NAME_EN)';
+
+    $(document).ready(function () {
+        CheckAction();
+    });
+
+    function CheckAction() {
+        if ('@Model.action' == '@Constants.Action.View') {
+            SetReadOnlyByDiv('frmDetail', true);
+        }
+        else if ('@Model.action' == '@Constants.Action.Edit') {
+            SetReadOnly(masterCode, false);
+        }
+    }
+
+    function FormValidate() {
+        var msg = '';
+        $(':input[type="text"]').css("border-color", "");
+        $('#' + masterType).css("border-color", "")
+
+        if (setValidateById(masterCode)) {
+            msg = 'Please complete the information' + ' ' + 'masterCode';
+        }
+        if (setValidateById(masterType)) {
+            msg = 'Please complete the information' + ' ' + 'masterType';
+        }
+        if (setValidateById(masterNameThai)) {
+            msg = 'Please complete the information' + ' ' + 'masterNameThai';
+        }
+        if (setValidateById(masterNameEng)) {
+            msg = 'Please complete the information' + ' ' + 'masterNameEng';
+        }
+
+        return msg;
+    }
+</script>

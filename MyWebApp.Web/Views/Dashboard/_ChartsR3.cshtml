@@ -1,0 +1,79 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Dashboard;
+@model List<Charts>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card">
+    <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+            </li>
+            <li><a class="dropdown-item" href="#">Today</a></li>
+            <li><a class="dropdown-item" href="#">This Month</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">R3 Leter <span>/Today</span></h5>
+        <div class="chart">
+            <canvas id="doughnutchart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var doughnutchartCanvas = document.getElementById("doughnutchart");
+
+    var text = [];
+    var value = [];
+
+    @if (Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            @:text.push("@item.text");
+            @:value.push(@item.value);
+        }
+    }
+            var doughnutChart = new Chart(doughnutchartCanvas, {
+            type: 'doughnut',
+            data: {
+                labels: ["รอใบตอบรับ", "ลูกค้าตอบรับ", "จดหมายตีกลับ"],
+                datasets: [{
+                    data: value,
+                    borderWidth: 0,
+                    backgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(157, 230, 41)',
+                        'rgb(41, 224, 230)',
+                        'rgb(255, 255, 0)'
+                    ],
+                    hoverBackgroundColor: [
+                        'rgb(255, 99, 132)',
+                        'rgb(54, 162, 235)',
+                        'rgb(157, 230, 41)',
+                        'rgb(41, 224, 230)',
+                        'rgb(255, 255, 0)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                legend: {
+                    position: "bottom",
+                    labels: {
+                        boxWidth: 11,
+                        fontColor: "#757681",
+                        fontSize: 11
+                    }
+                }
+            }
+        });
+
+</script>
+

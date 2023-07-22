@@ -1,0 +1,108 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Dashboard;
+@model List<StudentMarkDetails>
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card">
+    <div class="filter">
+        <a class="icon" href="#" data-bs-toggle="dropdown"><i class="bi bi-three-dots"></i></a>
+        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-arrow">
+            <li class="dropdown-header text-start">
+                <h6>Filter</h6>
+            </li>
+            <li><a class="dropdown-item" href="#">Today</a></li>
+            <li><a class="dropdown-item" href="#">This Month</a></li>
+            <li><a class="dropdown-item" href="#">This Year</a></li>
+        </ul>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">Legal <span>/Today</span></h5>
+        <div class="chart">
+            <canvas id="radarchart"></canvas>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    var Physics = []; //these are javascript array variables
+    var Chemistry = [];
+    var Biology = [];
+    var Mathematics = [];
+
+    @if (Model.Count > 0)
+    {
+        foreach (var item in Model)
+        {
+            @:Physics.push(@item.Physics);
+            @:Chemistry.push(@item.Chemistry);
+            @:Biology.push(@item.Biology);
+            @:Mathematics.push(@item.Mathematics);
+        }
+    }
+
+        var RadarChart = document.getElementById('radarchart').getContext('2d');
+        var chart = new Chart(RadarChart, {
+        type: 'radar',
+        data: {
+            labels: ["John", "Mary", "Asha", "Emily", "Bonnie"],//x axis labels
+            datasets: [{
+                label: "Physics",
+                data: Physics,
+                fill: true,
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                borderColor: 'rgb(255, 99, 132)',
+                pointBackgroundColor: 'rgb(255, 99, 132)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(255, 99, 132)'
+            }, {
+                label: "Chemistry",
+                data: Chemistry,
+                fill: true,
+                backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                borderColor: 'rgb(54, 162, 235)',
+                pointBackgroundColor: 'rgb(54, 162, 235)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(54, 162, 235)'
+            }, {
+                label: "Biology",
+                data: Biology,
+                fill: true,
+                backgroundColor: 'rgba(157, 230, 41, 0.2)',
+                borderColor: 'rgb(157, 230, 41)',
+                pointBackgroundColor: 'rgb(157, 230, 41)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(157, 230, 41)'
+            },
+            {
+                label: "Mathematics",
+                data: Mathematics,
+                fill: true,
+                backgroundColor: 'rgba(41, 224, 230, 0.2)',
+                borderColor: 'rgb(41, 224, 230)',
+                pointBackgroundColor: 'rgb(41, 224, 230)',
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: 'rgb(41, 224, 230)'
+
+            }]
+        },
+
+        // Configuration options
+        options: {
+            tooltips: {
+                callbacks: {
+                    label: function (tooltipItem, data) {
+                        return data.datasets[tooltipItem.datasetIndex].label + ": " + tooltipItem.yLabel;
+                    }
+                }
+            }
+        }
+    });
+
+</script>
+

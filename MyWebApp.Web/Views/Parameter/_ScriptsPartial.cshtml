@@ -1,0 +1,15 @@
+﻿@using MyWebApp.Core.Utility;
+
+<script>
+    $(function () {
+        BindData('Reset');
+    });
+
+    function BindData(action) {
+        var url = '@Url.Content(Constants.urlAction.ParameterGetData)';
+        var data = { "action": action };
+        $.post(url, data, function (response) {
+            $('#divDetail').html(response);
+        });
+    }
+</script>
