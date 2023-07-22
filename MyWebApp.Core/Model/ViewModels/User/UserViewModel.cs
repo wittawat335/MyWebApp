@@ -18,6 +18,9 @@ namespace MyWebApp.Core.Model.ViewModels.User
         public UserDTO? userDTO { get; set; }
         public UserRoleDTO? userRoleDTO { get; set; }
         public List<Role> roleSelect { get; set; }
+        public bool permEdit { get; set; }
+        public bool permView { get; set; }
+        public bool permAdd { get; set; }
         public UserViewModel()
         {
             userDTO = new UserDTO();

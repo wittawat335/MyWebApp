@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Core.DTO;
 using MyWebApp.Core.Model;
+using MyWebApp.Core.Model.ViewModels.Master;
 using MyWebApp.Core.Model.ViewModels.User;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
@@ -12,15 +13,26 @@ namespace MyWebApp.Web.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _service;
+        private readonly IPermissionService _permissionService;
+        Common common = new Common();
 
-        public UserController(IUserService service)
+        public UserController(IUserService service, IPermissionService permissionService)
         {
             _service = service;
+            _permissionService = permissionService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> IndexAsync()
         {
-            return View();
+            var model = new UserViewModel();
+            model.permAdd = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserAdd);
+            model.permEdit = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
+            model.permView = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserView);
+
+            return View(model);
         }
 
         [HttpPost]
@@ -34,6 +46,10 @@ namespace MyWebApp.Web.Controllers
 
                 model.UserRoleList = 
                     await _service.GetListRoleActiveOnly(model.userDTO == null ? "" : model.userDTO.USER_LOGIN);
+                model.permAdd = await _permissionService
+               .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserAdd);
+                model.permEdit = await _permissionService
+                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
                 model.action = action;
 
                 return PartialView(model);

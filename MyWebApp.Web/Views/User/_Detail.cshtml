@@ -84,16 +84,18 @@
                         class="btn btn-secondary" data-bs-dismiss="modal">
                     Close
                 </button>
-                @if (Model.action == Constants.Action.New ||
-                Model.action == Constants.Action.Edit)
+                @if(Model.permAdd || Model.permEdit)
                 {
-                    <button id="btnSave"
-                            type="button"
-                            class="btn btn-primary"
-                            onclick="Save('frmDetail','@Url.Content(Constants.urlAction.UserSave)')">
-                        Save
-                    </button>
-                }
+                    if (Model.action == Constants.Action.New || Model.action == Constants.Action.Edit)
+                    {
+                        <button id="btnSave"
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="Save('frmDetail','@Url.Content(Constants.urlAction.UserSave)')">
+                            Save
+                        </button>
+                    }
+                }              
             </div>
         </div>
     </div>

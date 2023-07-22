@@ -1,4 +1,6 @@
-﻿@using MyWebApp.Core.Utility;
+﻿@using MyWebApp.Core.Model.ViewModels.User;
+@using MyWebApp.Core.Utility;
+@model UserViewModel;
 @{
     ViewData["Title"] = "Index";
 }
@@ -13,7 +15,6 @@
         </ol>
     </nav>
 </div>
-
 <div class="card">
     <div class="card-body">
         <h5 class="card-title">Search</h5>
@@ -68,11 +69,14 @@
                             <th scope="col">Update By</th>
                             <th scope="col">Update Date</th>
                             <th scope="col" width="5%">Status</th>
-                            <th scope="col" width="17%" class="text-center">
-                                <button type="button" class="btn btn-success"
-                                        onclick="PopupDetail('','@Constants.Action.New')">
-                                    New 
-                                </button>
+                            <th scope="col" width="11%" class="text-center">
+                                @if (Model.permAdd)
+                                {
+                                    <button type="button" class="btn btn-success"
+                                    onclick="PopupDetail('','@Constants.Action.New')">
+                                        New 
+                                    </button>
+                                }
                             </th>
                         </tr>
                     </thead>
@@ -85,7 +89,9 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/pages/user/script.js"></script>
+    @{
+        await Html.RenderPartialAsync("_DataTableScriptsPartial", Model);
+    }
 }
 
 

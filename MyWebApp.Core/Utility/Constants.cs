@@ -680,7 +680,8 @@ namespace MyWebApp.Core.Utility
             //User
             public static string UserIndex = "~/User/Index";
             public static string UserSave = "~/User/Save";
-            public static string UserSerach = "~/User/_Search";
+            public static string UserDelete = "~/User/Delete";
+            public static string UserGetList = "~/User/GetList";
             public static string UserSerachAD = "~/User/SearchAD";
 
             //Doc

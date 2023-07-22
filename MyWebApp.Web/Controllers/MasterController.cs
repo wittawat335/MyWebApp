@@ -66,9 +66,12 @@ namespace MyWebApp.Web.Controllers
                 if (code != null)
                     model.masterDTO = await _service.GetByCode(code);
 
-                model.listMaster =
-                    await _service.GetListMasterActiveOnly();
+                model.listMaster = await _service.GetListMasterActiveOnly();
                 model.action = action;
+                model.permAdd = await _permissionService
+                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserAdd);
+                model.permEdit = await _permissionService
+                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
 
                 return PartialView(model);
             }
@@ -88,38 +91,27 @@ namespace MyWebApp.Web.Controllers
                 {
                     if (model.action == Constants.Action.New)
                     {
-                        response.value =
-                            await _service.Add(model.masterDTO);
-                        response.message =
-                            Constants.StatusMessage.Create_Action;
-                        response.status =
-                            Constants.Status.True;
-
+                        response.value = await _service.Add(model.masterDTO);
+                        response.message = Constants.StatusMessage.Create_Action;
+                        response.status = Constants.Status.True;
                     }
                     else if (model.action == Constants.Action.Edit)
                     {
-                        response.value =
-                            await _service.Update(model.masterDTO);
-                        response.message =
-                            Constants.StatusMessage.Update_Action;
-                        response.status =
-                            Constants.Status.True;
-
+                        response.value = await _service.Update(model.masterDTO);
+                        response.message = Constants.StatusMessage.Update_Action;
+                        response.status = Constants.Status.True;
                     }
                     else
                     {
                         response.status = Constants.Status.False;
-                        response.message =
-                            Constants.StatusMessage.No_Data;
+                        response.message = Constants.StatusMessage.No_Data;
                     }
                 }
                 else
                 {
                     response.status = Constants.Status.False;
-                    response.message =
-                        Constants.StatusMessage.No_Data;
+                    response.message = Constants.StatusMessage.No_Data;
                 }
-
             }
             catch (Exception ex)
             {
@@ -139,8 +131,7 @@ namespace MyWebApp.Web.Controllers
                 if (code != null)
                 {
                     response.value = await _service.Delete(code);
-                    response.message =
-                        Constants.StatusMessage.Delete_Action;
+                    response.message = Constants.StatusMessage.Delete_Action;
                     response.status = Constants.Status.True;
                 }
             }
@@ -151,11 +142,5 @@ namespace MyWebApp.Web.Controllers
             }
             return new JsonResult(response);
         }
-
-        public IActionResult Test()
-        {
-            return View();
-        }
-
     }
 }

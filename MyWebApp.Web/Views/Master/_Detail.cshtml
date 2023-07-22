@@ -63,14 +63,17 @@
                         data-bs-dismiss="modal">
                     Close
                 </button>
-                @if (Model.action != Constants.Action.View)
+                @if (Model.permAdd || Model.permEdit)
                 {
-                    <button id="btnSave"
-                            type="button"
-                            class="btn btn-primary"
-                            onclick="Save('frmDetail','@Url.Content(Constants.urlAction.MasterSave)')">
-                        Save
-                    </button>
+                    if (Model.action == Constants.Action.New || Model.action == Constants.Action.Edit)
+                    {
+                        <button id="btnSave"
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="Save('frmDetail','@Url.Content(Constants.urlAction.UserSave)')">
+                            Save
+                        </button>
+                    }
                 }
             </div>
         </div>
