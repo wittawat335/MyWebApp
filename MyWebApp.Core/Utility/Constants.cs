@@ -657,7 +657,7 @@ namespace MyWebApp.Core.Utility
             public static string MasterIndex = "~/Master/Index";
             public static string MasterSave = "~/Master/Save";
             public static string MasterDelete = "~/Master/Delete";
-            public static string MasterSearch = "~/Master/_Search";
+            public static string MasterGetList = "~/Master/GetList";
             public static string MasterDetail = "~/Master/_Detail";
 
             //Program

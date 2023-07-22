@@ -14,18 +14,25 @@ namespace MyWebApp.Web.Controllers
     public class MasterController : Controller
     {
         private readonly IMasterService _service;
+        private readonly IPermissionService _permissionService;
+        Common common = new Common();
 
-        public MasterController(IMasterService service)
+        public MasterController(IMasterService service, IPermissionService permissionService)
         {
             _service = service;
-
+            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Index()
         {
             var model = new MasterViewModel();
-            model.listMaster = 
-                await _service.GetListMasterActiveOnly();
+            model.listMaster = await _service.GetListMasterActiveOnly();
+            model.permAdd = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataAdd);
+            model.permEdit = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataEdit);
+            model.permView = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataView);
 
             return View(model);
         }
@@ -50,7 +57,7 @@ namespace MyWebApp.Web.Controllers
 
         [HttpPost]
         public async Task<IActionResult> _Detail(
-            string code, 
+            string code,
             string action)
         {
             MasterViewModel model = new MasterViewModel();
@@ -59,7 +66,7 @@ namespace MyWebApp.Web.Controllers
                 if (code != null)
                     model.masterDTO = await _service.GetByCode(code);
 
-                model.listMaster = 
+                model.listMaster =
                     await _service.GetListMasterActiveOnly();
                 model.action = action;
 
@@ -81,35 +88,35 @@ namespace MyWebApp.Web.Controllers
                 {
                     if (model.action == Constants.Action.New)
                     {
-                        response.value = 
+                        response.value =
                             await _service.Add(model.masterDTO);
-                        response.message = 
+                        response.message =
                             Constants.StatusMessage.Create_Action;
-                        response.status = 
+                        response.status =
                             Constants.Status.True;
 
                     }
                     else if (model.action == Constants.Action.Edit)
                     {
-                        response.value = 
+                        response.value =
                             await _service.Update(model.masterDTO);
-                        response.message = 
+                        response.message =
                             Constants.StatusMessage.Update_Action;
-                        response.status = 
+                        response.status =
                             Constants.Status.True;
 
                     }
                     else
                     {
                         response.status = Constants.Status.False;
-                        response.message = 
+                        response.message =
                             Constants.StatusMessage.No_Data;
                     }
                 }
                 else
                 {
                     response.status = Constants.Status.False;
-                    response.message = 
+                    response.message =
                         Constants.StatusMessage.No_Data;
                 }
 
@@ -132,7 +139,7 @@ namespace MyWebApp.Web.Controllers
                 if (code != null)
                 {
                     response.value = await _service.Delete(code);
-                    response.message = 
+                    response.message =
                         Constants.StatusMessage.Delete_Action;
                     response.status = Constants.Status.True;
                 }

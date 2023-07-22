@@ -18,6 +18,7 @@ namespace MyWebApp.Core
             services.AddScoped<IDashboardService, DashboardService>();
             services.AddScoped<ITodoListService, TodoListService>();
             services.AddScoped<IReceiveCarService, ReceiveCarService>();
+            services.AddScoped<IPermissionService, PermissionService>();
         }
     }
 }

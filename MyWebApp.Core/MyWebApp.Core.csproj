@@ -20,7 +20,6 @@
   <ItemGroup>
     <Folder Include="Domain\RepositoryContracts\" />
     <Folder Include="DTO\" />
-    <Folder Include="Services\Contract\" />
   </ItemGroup>
 
 </Project>

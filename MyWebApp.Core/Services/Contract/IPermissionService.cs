@@ -1,0 +1,14 @@
+﻿using MyWebApp.Core.Domain.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MyWebApp.Core.Services.Contract
+{
+    public interface IPermissionService
+    {
+        Task<bool> GetPermission(string userRole, string programCode, string actCode);
+    }
+}

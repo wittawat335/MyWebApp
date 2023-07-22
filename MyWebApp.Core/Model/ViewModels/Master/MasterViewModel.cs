@@ -17,6 +17,9 @@ namespace MyWebApp.Core.Model.ViewModels.Master
         public string? action { get; set; }
         public MasterDTO? masterDTO { get; set; }
         public List<MasterDTO>? listMaster { get; set; }
+        public bool permEdit { get; set; }
+        public bool permView { get; set; }
+        public bool permAdd { get; set; }
         public MasterViewModel()
         {
             masterDTO = new MasterDTO();
