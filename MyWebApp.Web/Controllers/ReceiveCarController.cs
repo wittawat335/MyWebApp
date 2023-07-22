@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Core.Model;
+using MyWebApp.Core.Model.ViewModels.ReceiveCar;
+using MyWebApp.Core.Services;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
 using static MyWebApp.Core.Model.ViewModels.ReceiveCar.ReceiveCarViewModel;
@@ -11,11 +13,13 @@ namespace MyWebApp.Web.Controllers
     public class ReceiveCarController : Controller
     {
         private readonly IReceiveCarService _service;
+        private readonly IPermissionService _permissionService;
         Common common = new Common();
 
-        public ReceiveCarController(IReceiveCarService service)
+        public ReceiveCarController(IReceiveCarService service, IPermissionService permissionService)
         {
             _service = service;
+            _permissionService = permissionService;
         }
 
         public IActionResult Index()
@@ -70,9 +74,13 @@ namespace MyWebApp.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult _popUpUpload()
-        {            
-            return PartialView();
+        public async Task<IActionResult> _popUpUpload()
+        {
+            var model = new ReceiveCarViewModel();
+            model.permEdit = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.ReceiveCar, Constants.ActCode.ReceiveCarEdit);
+
+            return PartialView(model);
         }
 
         public string GenerateAndDownLoadExcel()

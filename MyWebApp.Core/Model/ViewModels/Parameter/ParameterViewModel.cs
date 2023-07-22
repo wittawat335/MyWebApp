@@ -11,6 +11,9 @@ namespace MyWebApp.Core.Model.ViewModels.Parameter
     {
         public List<ParameterDTO> ParameterList { get; set; }
         public string action { get; set; }
+        public bool permEdit { get; set; }
+        public bool permView { get; set; }
+        public bool permAdd { get; set; }
         public ParameterViewModel()
         {
             ParameterList = new List<ParameterDTO>();

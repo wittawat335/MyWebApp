@@ -8,6 +8,9 @@ namespace MyWebApp.Core.Model.ViewModels.ReceiveCar
 {
     public class ReceiveCarViewModel
     {
+        public bool permEdit { get; set; }
+        public bool permView { get; set; }
+        public bool permAdd { get; set; }
         public class SearchModel
         {
             public string? refNo { get; set; }
