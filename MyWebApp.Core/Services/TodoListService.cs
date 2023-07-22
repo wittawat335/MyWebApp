@@ -32,7 +32,7 @@ namespace MyWebApp.Core.Services
         public async Task<List<T_JOB_ALL>> Search(SearchViewModel model)
         {
             try
-            { //fff
+            { 
                 var list = await _jobRepository.GetAll();
                 if (model.refNo != null)
                     list = list.Where(x => 
