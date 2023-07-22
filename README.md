@@ -1,6 +1,7 @@
 # ASP.NET CORE Clean Architecture
 # Language Programming
 # FrontEnd
+- Razor View
 - C#
 - Html
 - CSS
