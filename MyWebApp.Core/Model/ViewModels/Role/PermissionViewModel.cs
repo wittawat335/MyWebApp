@@ -17,6 +17,7 @@ namespace MyWebApp.Core.Model.ViewModels.Role
         public string RoleCode { get; set; }
         public M_PERMISSION permission { get; set; }
         public List<M_PERMISSION> listPermission { get; set; }
+        public Task<string> listJsonResult { get; set; }
         public PermissionViewModel()
         {
             permission = new M_PERMISSION();

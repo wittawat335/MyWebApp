@@ -23,7 +23,6 @@
         })
     }
     function OnSuccess(response) {
-        console.log(response.value)
         $('#dtResult').DataTable({
             bDestroy: true,
             bProcessing: true,
@@ -106,7 +105,7 @@
                     data: 'null',
                     render: function (data, type, row, meta) {
                         if (permView && permEdit) {
-                            return '<a class="btn btn-secondary ms-5" onclick=PopupDetailPermission("' + row.rolE_CODE + '","' + row.rolE_NAME + '","@Constants.Action.Edit");>'
+                            return '<a class="btn btn-secondary ms-5" onclick=PopupDetailPermission("' + row.rolE_CODE + '","@Constants.Action.Edit");>'
                                 + '<i class="bi bi-card-list"></a>'
                         }
                     }
@@ -118,9 +117,9 @@
         var data = { "code": code, "action": action };
         modalPOST(action + " " + "Role", "Role", "_Detail", data, 50);
     };
-    function PopupDetailPermission(code, name, action) {
+    function PopupDetailPermission(code, action) {
         var data = { "code": code, "action": action };
-        modalPOST(action + " " + name, "Role", "_DetailsPermission", data, 50);
+        modalPOST(action , "Role", "_DetailsPermission", data, 50);
     };
 </script>
 

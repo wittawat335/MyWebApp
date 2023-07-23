@@ -5,6 +5,8 @@ using MyWebApp.Core.Model.ViewModels.Role;
 using MyWebApp.Core.Services;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
+using Newtonsoft.Json;
+using static MyWebApp.Core.Model.ViewModels.TreeViewInAspNetCor;
 
 namespace MyWebApp.Web.Controllers
 {
@@ -72,17 +74,22 @@ namespace MyWebApp.Web.Controllers
                 throw;
             }
         }
-
         [HttpPost]
-        public IActionResult _DetailsPermission(string mode, string code)
+        public async Task<IActionResult> _DetailsPermission(string code)
         {
-            var model = new PermissionViewModel();
+            List<DataPermissionJsonList> objReturn = new List<DataPermissionJsonList>();
             try
             {
-                model.RoleCode = code;
-                model.Visibility = false;
-
-                return PartialView(model);
+                if (code != null)
+                {
+                    ViewBag.RoleCode = code;
+                    ViewBag.Visibility = false;
+                    objReturn = await GetListSp(code);
+                }
+              
+                ViewBag.Json = JsonConvert.SerializeObject(objReturn);
+               
+                return PartialView();
             }
             catch (Exception)
             {
@@ -91,8 +98,7 @@ namespace MyWebApp.Web.Controllers
 
         }
 
-        [HttpPost]
-        public async Task<JsonResult> GetPermissionData(string code)
+        public async Task<List<DataPermissionJsonList>> GetListSp(string code)
         {
             try
             {
@@ -100,12 +106,9 @@ namespace MyWebApp.Web.Controllers
                 List<SP_SEARCH_PERMISSION_BY_ROLE_Result> objData = await _service.GetPermissionData(code);
                 if (objData != null && objData.Count > 0)
                 {
-
                     int? iCountTopLevel = objData.Count;
-
                     for (int i = 0; i < iCountTopLevel; i++)
                     {
-
                         bool varSelect = false;
                         if (objData[i].PERM_SELECT == "1")
                             varSelect = true;
@@ -130,18 +133,40 @@ namespace MyWebApp.Web.Controllers
                         }
 
                         string strParent = (string.IsNullOrEmpty(objData[i].PERM_PARENT)) ? "#" : objData[i].PERM_PARENT;
-                        bool booParentOpen = false;
+                        bool booParentOpen = (string.IsNullOrEmpty(objData[i].PERM_PARENT)) ? false : true;
                         OptionState objStates = new OptionState { opened = booParentOpen, selected = varSelect };
-                        objReturn.Add(new DataPermissionJsonList() { id = objData[i].PERM_ID, parent = strParent, 
-                            text = objData[i].PERM_TEXT, icon = strIcon, state = objStates });
+                        objReturn.Add(new DataPermissionJsonList()
+                        {
+                            id = objData[i].PERM_ID.ToString(),
+                            parent = strParent.ToString(),
+                            text = objData[i].PERM_TEXT,
+                            icon = strIcon,
+                            state = objStates
+                        });
                     }
                 }
-                return Json(objReturn);
+                return objReturn;
             }
             catch
             {
                 throw;
             }
         }
+
+        [HttpPost]
+        public IActionResult SavePermission(string selectedItems, string roleCode)
+        {
+            List<TreeViewNode> items = new List<TreeViewNode>();
+            try
+            {
+                if (selectedItems != null)
+                    items = JsonConvert.DeserializeObject<List<TreeViewNode>>(selectedItems);                    
+            }
+            catch
+            {
+                throw;
+            }
+            return RedirectToAction("Index");
+        }             
     }
 }

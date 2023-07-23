@@ -967,10 +967,10 @@ namespace MyWebApp.Core.Utility
             public const string TextEdit = "Edit";
             public const string TextView = "View";
 
-            public const string IconDefault = "fa fa-folder icon-state-warning icon-lg";
-            public const string IconAdd = "fa fa-plus font-green-jungle icon-lg";
-            public const string IconEdit = "fa fa-pencil icon-state-warning icon-lg";
-            public const string IconView = "fa fa-eye font-dark icon-lg";
+            public const string IconDefault = "bi bi-folder";
+            public const string IconAdd = "bi bi-plus-lg";
+            public const string IconEdit = "bi bi-pencil";
+            public const string IconView = "bi bi-eye-fill";
         }
         public struct DebtorStatus
         {

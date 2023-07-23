@@ -50,51 +50,13 @@
             });
         }
     });
+
+    $(document).ajaxStart(function () {
+        $('#loading').show();
+    }).ajaxStop(function () {
+        $('#loading').hide();
+    });
 });
-function onLoading(response) {
-    if (response.status) {
-        $("#idLoading").fadeIn();
-        $("#idLoader").fadeIn();
-        setTimeout(function () {
-            OnSuccess(response.value);
-            endLoading();
-        }, 1000);
-    }
-    else {
-        setTimeout(function () {
-            alert(response.message);
-            endLoading();
-        }, 1000);
-    }
-}
-function endLoading() {
-    $("#fade_area").removeAttr("style");
-    $("#myModal").removeAttr("style");
-    $("#idLoading").removeAttr("style");
-    $("#idLoader").removeAttr("style");
-}
-
-function onLoadingModal(response) {
-    $(".overlay,.popup").fadeIn();
-    if (response.status == true) {
-        setTimeout(function () {
-            OnSuccess(response.value);
-            endLoading();
-        }, 1000);
-    }
-    else if (response.status == false) {
-        setTimeout(function () {
-            alert(response.message);
-            endLoading();
-        }, 1000);
-    }
-    else {
-        setTimeout(function () {
-            endLoading();
-        }, 1000);
-    }
-}
-
 
 function alertMessage(message) {
     if (!message)

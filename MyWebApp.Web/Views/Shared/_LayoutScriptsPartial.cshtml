@@ -1,4 +1,5 @@
-﻿@using MyWebApp.Core.Utility;
+﻿@using MyWebApp.Core.Model;
+@using MyWebApp.Core.Utility;
 @{
     var common = new Common();
     var logInInfo = common.GetValueBySession();
@@ -18,11 +19,12 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/jszip.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.8.0/xlsx.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
 <script>
     var urlSelectRole = '@Url.Content(Constants.urlAction.HomeSelectRole)';
     function setRole(roleCode) {
         var url = urlSelectRole;
-        var data = { "role": roleCode};
+        var data = { "role": roleCode };
         $.post(url, data, function (response) {
             if (response.status) {
                 swalMessage('success', response.message);

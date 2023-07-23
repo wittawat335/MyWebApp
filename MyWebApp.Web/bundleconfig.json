@@ -1,0 +1,46 @@
+[
+  {
+    "outputFileName": "wwwroot/css/StyleSheet.css",
+    "inputFiles": [
+      "wwwroot/vendor/bootstrap/css/bootstrap.min.css",
+      "wwwroot/vendor/bootstrap-icons/bootstrap-icons.css",
+      "wwwroot/vendor/boxicons/css/boxicons.min.css",
+      "wwwroot/vendor/quill/quill.snow.css",
+      "wwwroot/vendor/quill/quill.bubble.css",
+      "wwwroot/vendor/remixicon/remixicon.css",
+      "wwwroot/css/datatable/datatables.css",
+      "wwwroot/vendor/datatable/datatables.min.css",
+      "wwwroot/css/style.css",
+      "wwwroot/css/progressbar.css",
+      "wwwroot/css/StyleSelect2.css"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    }
+  },
+  {
+    "outputFileName": "wwwroot/js/site.js",
+    "inputFiles": [
+      "wwwroot/js/Pages/Layout/Custom.js",
+      "wwwroot/bootbox/bootbox.js",
+      "wwwroot/vendor/datatable/datatables.js",
+      "wwwroot/vendor/datatable/datatables.min.js",
+      "wwwroot/vendor/apexcharts/apexcharts.min.js",
+      "wwwroot/vendor/bootstrap/js/bootstrap.bundle.min.js",
+      "wwwroot/vendor/quill/quill.min.js",
+      "wwwroot/vendor/tinymce/tinymce.min.js",
+      "wwwroot/vendor/php-email-form/validate.js",
+      "wwwroot/js/main.js",
+      "wwwroot/js/moment.js",
+      "wwwroot/js/Pages/Layout/dataTableCustom.js",
+      "wwwroot/js/Pages/Layout/SweetAlertCustom.js",
+      "wwwroot/js/Pages/Layout/validatetor.js",
+      "wwwroot/js/Pages/Layout/SaveScript.js"
+    ],
+    "minify": {
+      "enabled": false,
+      "renameLocals": true
+    }
+  }
+]

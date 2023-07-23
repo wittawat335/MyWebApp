@@ -4,7 +4,7 @@
 @{
     ViewData["Title"] = "Index";
 }
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/themes/default/style.min.css" />
 <div class="pagetitle">
     <h1>Role</h1>
     <nav>
@@ -71,5 +71,7 @@
     @{
         await Html.RenderPartialAsync("_DataTableScriptsPartial", Model);
     }
+
+  
 }
 
