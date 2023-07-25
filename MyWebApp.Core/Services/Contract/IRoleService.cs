@@ -13,5 +13,7 @@ namespace MyWebApp.Core.Services.Contract
         Task<List<M_ROLE>> GetList();
         Task<M_ROLE> GetByCode(string code);
         Task<List<SP_SEARCH_PERMISSION_BY_ROLE_Result>> GetPermissionData(string code);
+        Task<bool> DeletePermissionListByCode(string code);
+        Task<bool> Childrenlist(string role, List<DataPermissionJsonInsertList> model);
     }
 }

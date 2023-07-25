@@ -1,59 +1,36 @@
 ﻿@using MyWebApp.Core.Model.ViewModels.Role;
 @using MyWebApp.Core.Utility;
-@model PermissionViewModel;
+@model PermissionViewModel
 
-<div id="jstree" class="mx-auto">
+
+<div style="display: none">
+    @Model.RoleCode;
 </div>
-<form method="post" asp-controller="Role" asp-action="SavePermission">
-    <input type="hidden" value="@Html.Raw(ViewBag.RoleCode)" name="roleCode" id="roleCode" />
-    <input type="hidden" name="selectedItems" id="selectedItems" />
-    <input type="submit" value="Submit" />
-</form>
-<script type="text/javascript">
-    $(function () {
-        console.log(@Html.Raw(ViewBag.Json));
-        $('#jstree').on('changed.jstree', function (e, data) {
-            var i, j;
-            var selectedItems = [];
-            var selectedNodes = $('#jstree').jstree("get_selected", true);
-            var selectedNodes2 = $('#jstree').jstree("get_undetermined", true);
-            console.log(selectedNodes);
-            console.log(selectedNodes2);
-            for (i = 0, j = data.selected.length; i < j; i++) {
 
-                //Fetch the Id.
-                var id = data.selected[i];
-                console.log(id);
-                ////Remove the ParentId.
-                if (id.indexOf('-') != -1) {
-                    id = id.split("-")[1];
+<div>
+    <div class="row mx-auto">
+        <div id="PermissionDetails"></div>
+    </div>
+
+    <div class="row">
+        <hr />
+        <div class="col-md-12">
+            <div class="float-end">
+                <button id="btnClose"
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+                    Close
+                </button>
+                @if (Model.permEdit || Model.permAdd)
+                {
+                    <button id="btnSave" class="btn btn-primary">Save</button>
                 }
-                //Add the Node to the JSON Array.
-                selectedItems.push({
-                    text: data.instance.get_node(data.selected[i]).text,
-                    id: id,
-                    parent: data.node.parents[0]
-                });
-            }
+            </div>
+        </div>
+    </div>
+</div>
 
-            //Serialize the JSON Array and save in HiddenField.
-            $('#selectedItems').val(JSON.stringify(selectedItems));
-        }).jstree({
-            "core": {
-                "themes": {
-                    "variant": "large"
-                },
-                "data": @Html.Raw(ViewBag.Json)
-                            },
-            "checkbox": {
-                "keep_selected_style": false,
-                "visible": true,
-                "three_state": true,
-                "whole_node": true,
-            },
-
-            "plugins": ["types", "checkbox", "wholerow"]
-        });
-    });
-</script>
-
+@{
+    await Html.RenderPartialAsync("_DetailsPermissionScriptPartial", Model);
+}

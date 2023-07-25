@@ -703,8 +703,9 @@ namespace MyWebApp.Core.Utility
             public static string RoleSerach = "~/Role/_Search";
             public static string RoleSave = "~/Role/Save";
             public static string RoleIndex = "~/Role/Index";
-            public static string RoleSearchPermission = "~/Role/GetPermissionData";
+            public static string RoleSearchPermission = "~/Role/GetJsTree";
             public static string RoleSavePermission = "~/Role/SavePermission";
+            public static string RoleGetListPermission = "~/Role/GetListPermission";
 
             //Permission
             public static string PermissionSerach = "~/Permission/_Search";

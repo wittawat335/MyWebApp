@@ -1,0 +1,74 @@
+﻿@using MyWebApp.Core.Model.ViewModels.Role;
+@using MyWebApp.Core.Utility;
+@model PermissionViewModel
+<script>
+    $(function () {
+        getPermissionData();
+        $('#modalDialog').on('hidden.bs.modal', function () {
+            GetList();
+        })
+    });
+    function getPermissionData() {
+        $.ajax({
+            type: 'post',
+            dataType: "json",
+            url: '@Url.Content(Constants.urlAction.RoleSearchPermission)',
+            data: { roleCode: '@Model.RoleCode' },
+            success: function (data) {
+                buildTree(data);
+            },
+            error: function (xhr, status, error) {
+                var err = eval("(" + xhr.responseText + ")");
+                alert(err.Message);
+            }
+        });
+    };
+
+    function buildTree(data) {
+        $('#PermissionDetails').jstree({
+            'core': {
+                "themes": { "responsive": false },
+                'data': data
+            },
+            'plugins': ["checkbox", "types"]
+        });
+    };
+
+    $("#btnSave").click(function () {
+        var treeData = $('#PermissionDetails').jstree(true).get_json('#', { flat: false });
+        var jsonData = '{"roleCode": "@ViewBag.RoleCode", "permissionData":' + JSON.stringify(treeData) + '}';
+        $.ajax({
+            contentType: 'application/json; charset=utf-8',
+            dataType: 'json',
+            type: 'POST',
+            url: '@Url.Content(Constants.urlAction.RoleGetListPermission)',
+            data: JSON.stringify(treeData),
+            success: function (response) {
+                if (response) {
+                    SaveListPermission(response.value);
+                }
+            }
+        });
+    });
+
+    function SaveListPermission(list) {
+        $.ajax({
+            type: 'POST',
+            dataType: "json",
+            url: '@Url.Content(Constants.urlAction.RoleSavePermission)',
+            data: {
+                "roleCode": "@Model.RoleCode"
+            },
+            success: function (response) {
+                if (response.status) {
+                    swalMessage('success', response.message);
+                    closeModal();
+                    GetList();
+                }
+                else {
+                    swalMessage('error', response.message);
+                }
+            }
+        });
+    }
+</script>

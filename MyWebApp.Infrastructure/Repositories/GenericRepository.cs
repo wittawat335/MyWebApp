@@ -202,6 +202,19 @@ namespace MyWebApp.Infrastructure.Repositories
         {
             await _dbContext.SaveChangesAsync();
         }
+
+        public T AddOnly(T model)
+        {
+            try
+            {
+                _dbSet.Add(model);
+                return model;
+            }
+            catch
+            {
+                throw;
+            }
+        }
         #endregion
     }
 }

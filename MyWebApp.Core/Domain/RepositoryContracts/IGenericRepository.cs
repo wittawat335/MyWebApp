@@ -9,6 +9,7 @@ namespace MyWebApp.Core.Domain.RepositoryContracts
               int? skip = null, int? take = null);
         Task<T> Get(Expression<Func<T, bool>> filter);
         Task<T> Add(T model);
+        T AddOnly(T model);
         Task<bool> AddList(List<T> model);
         Task<bool> Update(T model);
         Task<bool> Delete(T model);
