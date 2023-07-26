@@ -6,10 +6,11 @@
         getPermissionData();
         $('#modalDialog').on('hidden.bs.modal', function () {
             GetList();
-        })
+        })      
     });
     function getPermissionData() {
         $.ajax({
+            async: true,
             type: 'post',
             dataType: "json",
             url: '@Url.Content(Constants.urlAction.RoleSearchPermission)',

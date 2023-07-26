@@ -615,7 +615,7 @@ namespace MyWebApp.Core.Utility
             }
 
         }
-        public string UserLogin
+        public string? UserLogin
         {
             get
             {
@@ -625,7 +625,7 @@ namespace MyWebApp.Core.Utility
                 return logInInfo.UserLogin;
             }
         }
-        public string UserName
+        public string? UserName
         {
             get
             {
@@ -636,7 +636,7 @@ namespace MyWebApp.Core.Utility
             }
         }
 
-        public string UserRole
+        public string? UserRole
         {
             get
             {
@@ -646,7 +646,7 @@ namespace MyWebApp.Core.Utility
                 return loginInfo.Role;
             }
         }
-        public string UserRoleName
+        public string? UserRoleName
         {
             get
             {
@@ -656,7 +656,7 @@ namespace MyWebApp.Core.Utility
                 return loginInfo.RoleName;
             }
         }
-        public string UserDataLevel
+        public string? UserDataLevel
         {
             get
             {

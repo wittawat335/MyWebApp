@@ -3,6 +3,7 @@ using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.DTO;
 using MyWebApp.Core.Services.Contract;
+using MyWebApp.Core.Utility;
 
 namespace MyWebApp.Core.Services
 {
@@ -10,23 +11,26 @@ namespace MyWebApp.Core.Services
     {
         private readonly IGenericRepository<M_PROGRAM> _programRepository;
         private readonly IGenericRepository<M_PERMISSION> _perRepository;
-        private readonly IProgramRepository _repository; 
+        private readonly IGenericRepository<M_ACTION> _actRepository;
+        private readonly IProgramRepository _repository;
         private readonly IMapper _mapper;
+        Common common = new Common();
 
-        public ProgramService(IGenericRepository<M_PROGRAM> programRepository, IGenericRepository<M_PERMISSION> perRepository,
+        public ProgramService(IGenericRepository<M_PROGRAM> programRepository, IGenericRepository<M_ACTION> actRepository, IGenericRepository<M_PERMISSION> perRepository,
             IProgramRepository repository, IMapper mapper)
         {
             _repository = repository;
             _perRepository = perRepository;
             _programRepository = programRepository;
             _mapper = mapper;
+            _actRepository = actRepository;
         }
 
         public async Task<List<M_PROGRAM>> GetAll()
         {
             try
             {
-                var list = await _programRepository.GetAll();
+                var list = await _programRepository.GetAll(x => x.PROG_TARGET_URL != "#");
                 return list.ToList();
             }
             catch
@@ -38,7 +42,7 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var query = await 
+                var query = await
                     _programRepository.Get(x => x.PROG_CODE == code);
                 return query;
             }
@@ -51,7 +55,7 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var query = await 
+                var query = await
                     _programRepository.Add(model);
                 return true;
             }
@@ -65,23 +69,49 @@ namespace MyWebApp.Core.Services
             bool result = false;
             try
             {
-                var query = await _programRepository
-                    .Get(x => x.PROG_CODE == model.PROG_CODE);
-                if (query != null)
+                var updateProgram = await _programRepository.Get(x => x.PROG_CODE == model.PROG_CODE);
+                if (updateProgram != null)
                 {
-                    query.PROG_NAME = model.PROG_NAME;
-                    query.PROG_LEVEL = model.PROG_LEVEL;
-                    query.PROG_PARENT_CODE = model.PROG_PARENT_CODE;
-                    query.PROG_TARGET_URL = model.PROG_TARGET_URL;
-                    query.PROG_ORDER = model.PROG_ORDER;
-                    query.PROG_ICON = model.PROG_ICON;
-                    query.PROG_CREATE_BY = model.PROG_CREATE_BY;
-                    query.PROG_CREATE_DATE = model.PROG_CREATE_DATE;
-                    query.PROG_UPDATE_BY = model.PROG_UPDATE_BY;
-                    query.PROG_UPDATE_DATE = model.PROG_UPDATE_DATE;
-                    query.PROG_STATUS = model.PROG_STATUS;
+                    if (model.PROG_STATUS != updateProgram.PROG_STATUS)
+                    {
+                        var updatePerMission = await _perRepository.GetAll(x => x.PERM_PROG_CODE == model.PROG_CODE);
+                        var updateAction = await _actRepository.GetAll(x => x.ACT_PROG_CODE == model.PROG_CODE);
+                        if (updatePerMission.ToList().Count() > 0) //Update Status M_PROGRAM
+                        {
+                            foreach (var item in updatePerMission) 
+                            {
+                                item.PERM_STATUS = model.PROG_STATUS;
+                                item.PERM_UPDATE_BY = model.PROG_UPDATE_BY;
+                                item.PERM_UPDATE_DATE = model.PROG_UPDATE_DATE;
 
-                    result = await _programRepository.Update(query);
+                               await _perRepository.Update(item);
+                            }
+                        }
+                        if (updateAction.ToList().Count() > 0) //Update Status M_ACTION
+                        {
+                            foreach (var item in updateAction)
+                            {
+                                item.ACT_STATUS = model.PROG_STATUS;
+                                item.ACT_UPDATE_BY = model.PROG_UPDATE_BY;
+                                item.ACT_UPDATE_DATE = model.PROG_UPDATE_DATE;
+
+                                await _actRepository.Update(item);
+                            }
+                        }
+                    }
+                    updateProgram.PROG_NAME = model.PROG_NAME;
+                    updateProgram.PROG_LEVEL = model.PROG_LEVEL;
+                    updateProgram.PROG_PARENT_CODE = model.PROG_PARENT_CODE;
+                    updateProgram.PROG_TARGET_URL = model.PROG_TARGET_URL;
+                    updateProgram.PROG_ORDER = model.PROG_ORDER;
+                    updateProgram.PROG_ICON = model.PROG_ICON;
+                    updateProgram.PROG_CREATE_BY = model.PROG_CREATE_BY;
+                    updateProgram.PROG_CREATE_DATE = model.PROG_CREATE_DATE;
+                    updateProgram.PROG_UPDATE_BY = model.PROG_UPDATE_BY;
+                    updateProgram.PROG_UPDATE_DATE = model.PROG_UPDATE_DATE;
+                    updateProgram.PROG_STATUS = model.PROG_STATUS;
+
+                    result = await _programRepository.Update(updateProgram);
                 }
 
                 return result;
@@ -95,7 +125,7 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var query = await 
+                var query = await
                     _programRepository.Get(x => x.PROG_CODE == code);
                 if (query == null)
                     throw new TaskCanceledException("No Data");
@@ -108,7 +138,7 @@ namespace MyWebApp.Core.Services
             {
                 throw;
             }
-        }       
+        }
         public List<ProgramDTO> GetByRole(string code)
         {
             try
@@ -119,7 +149,7 @@ namespace MyWebApp.Core.Services
                 var list = tbUser.ToList();
                 return _mapper.Map<List<ProgramDTO>>(list);
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -139,7 +169,6 @@ namespace MyWebApp.Core.Services
                 return "~/Home/Index";
             }
         }
-
         public async Task<List<ProgramDTO>> GetByRoleAsync(string code)
         {
             try

@@ -63,8 +63,7 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var user = await _userRepository.Get(x => x.USER_LOGIN == userLogin && 
-                x.USER_STATUS == Constants.Status.Active);
+                var user = await _userRepository.Get(x => x.USER_LOGIN == userLogin);
                 return _mapper.Map<UserDTO>(user);
             }
             catch

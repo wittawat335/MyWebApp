@@ -1,17 +1,15 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Model;
 using MyWebApp.Core.Model.ViewModels.Role;
-using MyWebApp.Core.Services;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
 using Newtonsoft.Json;
-using System.Collections.Generic;
-using static MyWebApp.Core.Model.ViewModels.TreeViewInAspNetCor;
 
 namespace MyWebApp.Web.Controllers
 {
+    [Authorize]
     public class RoleController : Controller
     {
         private readonly IRoleService _service;
@@ -75,6 +73,34 @@ namespace MyWebApp.Web.Controllers
             }
         }
         [HttpPost]
+        public async Task<IActionResult> Save(RoleViewModel model)
+        {
+            var response = new Response<M_ROLE>();
+            try
+            {
+                if (model != null)
+                {
+                    if (model.action == Constants.Action.New)
+                    {
+                        response.value = await _service.Add(model.role);
+                        response.message = Constants.StatusMessage.Create_Action;
+                        response.status = Constants.Status.True;
+                    }
+                    else if (model.action == Constants.Action.Edit)
+                    {
+                        response.status = await _service.Update(model.role);
+                        response.message = Constants.StatusMessage.Update_Action;
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = Constants.StatusMessage.No_Data;
+            }
+            return new JsonResult(response);
+        }
+        [HttpPost]
         public async Task<IActionResult> _DetailsPermission(string code)
         {
             var model = new PermissionViewModel();
@@ -97,60 +123,60 @@ namespace MyWebApp.Web.Controllers
             }
 
         }
-        public async Task<List<DataPermissionJsonList>> GetListSp(string code)
-        {
-            try
-            {
-                List<DataPermissionJsonList> objReturn = new List<DataPermissionJsonList>();
-                List<SP_SEARCH_PERMISSION_BY_ROLE_Result> objData = await _service.GetPermissionData(code);
-                if (objData != null && objData.Count > 0)
-                {
-                    int? iCountTopLevel = objData.Count;
-                    for (int i = 0; i < iCountTopLevel; i++)
-                    {
-                        bool varSelect = false;
-                        if (objData[i].PERM_SELECT == "1")
-                            varSelect = true;
+        //public async Task<List<DataPermissionJsonList>> GetListSp(string code)
+        //{
+        //    try
+        //    {
+        //        List<DataPermissionJsonList> objReturn = new List<DataPermissionJsonList>();
+        //        List<SP_SEARCH_PERMISSION_BY_ROLE_Result> objData = await _service.GetPermissionData(code);
+        //        if (objData != null && objData.Count > 0)
+        //        {
+        //            int? iCountTopLevel = objData.Count;
+        //            for (int i = 0; i < iCountTopLevel; i++)
+        //            {
+        //                bool varSelect = false;
+        //                if (objData[i].PERM_SELECT == "1")
+        //                    varSelect = true;
 
-                        string strIcon;
-                        switch (objData[i].PERM_TEXT)
-                        {
-                            case Constants.JsTreeConfig.TextAdd:
-                                strIcon = Constants.JsTreeConfig.IconAdd;
-                                break;
-                            case Constants.JsTreeConfig.TextEdit:
-                                strIcon = Constants.JsTreeConfig.IconEdit;
-                                break;
-                            case Constants.JsTreeConfig.TextView:
-                                strIcon = Constants.JsTreeConfig.IconView;
-                                break;
-                            default:
-                                {
-                                    strIcon = Constants.JsTreeConfig.IconDefault;
-                                    break;
-                                }
-                        }
+        //                string strIcon;
+        //                switch (objData[i].PERM_TEXT)
+        //                {
+        //                    case Constants.JsTreeConfig.TextAdd:
+        //                        strIcon = Constants.JsTreeConfig.IconAdd;
+        //                        break;
+        //                    case Constants.JsTreeConfig.TextEdit:
+        //                        strIcon = Constants.JsTreeConfig.IconEdit;
+        //                        break;
+        //                    case Constants.JsTreeConfig.TextView:
+        //                        strIcon = Constants.JsTreeConfig.IconView;
+        //                        break;
+        //                    default:
+        //                        {
+        //                            strIcon = Constants.JsTreeConfig.IconDefault;
+        //                            break;
+        //                        }
+        //                }
 
-                        string strParent = (string.IsNullOrEmpty(objData[i].PERM_PARENT)) ? "#" : objData[i].PERM_PARENT;
-                        bool booParentOpen = false;
-                        OptionState objStates = new OptionState { opened = booParentOpen, selected = varSelect };
-                        objReturn.Add(new DataPermissionJsonList()
-                        {
-                            id = objData[i].PERM_ID.ToString(),
-                            parent = strParent.ToString(),
-                            text = objData[i].PERM_TEXT,
-                            icon = strIcon,
-                            state = objStates
-                        });
-                    }
-                }
-                return objReturn;
-            }
-            catch
-            {
-                throw;
-            }
-        }
+        //                string strParent = (string.IsNullOrEmpty(objData[i].PERM_PARENT)) ? "#" : objData[i].PERM_PARENT;
+        //                bool booParentOpen = false;
+        //                OptionState objStates = new OptionState { opened = booParentOpen, selected = varSelect };
+        //                objReturn.Add(new DataPermissionJsonList()
+        //                {
+        //                    id = objData[i].PERM_ID.ToString(),
+        //                    parent = strParent.ToString(),
+        //                    text = objData[i].PERM_TEXT,
+        //                    icon = strIcon,
+        //                    state = objStates
+        //                });
+        //            }
+        //        }
+        //        return objReturn;
+        //    }
+        //    catch
+        //    {
+        //        throw;
+        //    }
+        //}
         public async Task<IActionResult> GetJsTree(string roleCode)
         {
             List<DataPermissionJsonList> objReturn = new List<DataPermissionJsonList>();

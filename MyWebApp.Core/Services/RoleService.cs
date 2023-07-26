@@ -121,5 +121,46 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
+
+        public async Task<M_ROLE> Add(M_ROLE model)
+        {
+            try
+            {
+                return await _repository.Add(model);
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> Update(M_ROLE model)
+        {
+            try
+            {
+                var upDate = await _repository.Get(x => x.ROLE_CODE == model.ROLE_CODE);
+                if (upDate != null)
+                {
+                    upDate.ROLE_NAME = model.ROLE_NAME;
+                    upDate.ROLE_DATA_LEVEL = model.ROLE_DATA_LEVEL;
+                    upDate.ROLE_UPDATE_BY = model.ROLE_UPDATE_BY;
+                    upDate.ROLE_UPDATE_DATE = model.ROLE_UPDATE_DATE;
+                    upDate.ROLE_STATUS = model.ROLE_STATUS;
+
+                    await _repository.Update(upDate);
+
+                }
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> Delete(string code)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

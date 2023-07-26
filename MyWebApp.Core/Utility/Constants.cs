@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -111,6 +112,7 @@ namespace MyWebApp.Core.Utility
             public const string ValidateSelectRole = "Please select role";
             public const string UserNameInvalid = "Username is invalid";
             public const string PasswordInvalid = "Password is invalid";
+            public const string UserInActive = "Your user has been suspended.";
             public const string UserNameOrPasswordInvalid = "Username Or Password is invalid";
             public const string LoginSucc = "Login success";
             public const string LoginFail = "Login failed";

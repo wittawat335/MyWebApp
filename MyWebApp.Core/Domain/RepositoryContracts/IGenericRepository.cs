@@ -12,6 +12,7 @@ namespace MyWebApp.Core.Domain.RepositoryContracts
         T AddOnly(T model);
         Task<bool> AddList(List<T> model);
         Task<bool> Update(T model);
+        Task<bool> UpdateTest(T model);
         Task<bool> Delete(T model);
         Task<bool> DeleteList(List<T> model);
         List<T> GetListBySP(string command);

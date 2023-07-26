@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.Model;
 using MyWebApp.Infrastructure.DBContext;
@@ -49,6 +50,20 @@ namespace MyWebApp.Infrastructure.Repositories
             try
             {
                 _dbContext.Set<T>().Update(model);
+                await _dbContext.SaveChangesAsync();
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<bool> UpdateTest(T model)
+        {
+            try
+            {
+                _dbContext.Set<T>().Entry(model).State = EntityState.Modified;
                 await _dbContext.SaveChangesAsync();
                 return true;
             }

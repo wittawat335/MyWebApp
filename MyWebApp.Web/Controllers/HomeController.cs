@@ -98,7 +98,7 @@ namespace MyWebApp.Web.Controllers
             try
             {
                 var colUser = await _loginService.findUser(userAD);
-                if (colUser != null)
+                if (colUser != null && colUser.USER_STATUS == Constants.Status.Active)
                 {
                     //Set Config
                     var sysdate = await _parameterService
@@ -252,8 +252,14 @@ namespace MyWebApp.Web.Controllers
                         }
                     }
                 }
+                else if (colUser != null && colUser.USER_STATUS == Constants.Status.Inactive)
+                {
+                    response.status = Constants.Status.False;
+                    response.message = Constants.Msg.UserInActive;
+                }
                 else //Check User ใน System ถ้าไม่มี ?
                 {
+                    response.status = Constants.Status.False;
                     response.message = Constants.Msg.UserNameInvalid;
                 }
             }

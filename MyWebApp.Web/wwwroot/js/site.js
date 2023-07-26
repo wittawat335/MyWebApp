@@ -44,9 +44,18 @@ $(document).ready(function () {
     }).ajaxError(function (e, xhr, settings, exception) {
         if (exception.toString() != '' && exception.toString() != 'abort') { // && exception.toString() != 'abort'
             //  alertMessage('Error ' + exception.toString());
-            bootbox.confirm("System error - Do you want error message?", function (result) {
-                if (result)
-                    window.location.href = "../Error/Error";
+            Swal.fire({
+                title: "System error - Do you want error message?",
+                icon: 'info',
+                confirmButtonColor: '#3085d6',
+                confirmButtonText: 'Yes',
+                showCancelButton: true,
+                cancelButtonColor: '#d33',
+                cancelButtonText: 'No',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    window.location.href = "/ErrorPage/{0}";
+                }
             });
         }
     });
@@ -16481,6 +16490,21 @@ function swalMessage(icon, message) {
         title: message,
         showConfirmButton: false,
         timer: 1000
+    });
+}
+function ConfirmMessage() {
+    Swal.fire({
+        title: "System error - Do you want error message?",
+        icon: 'info',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'Yes',
+        showCancelButton: true,
+        cancelButtonColor: '#d33',
+        cancelButtonText: 'No',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = "../Error/Index";
+        }
     });
 }
 function Delete(code, name, url) {
