@@ -2,10 +2,12 @@ using MyWebApp.Infrastructure.DBContext;
 using MyWebApp.Infrastructure;
 using MyWebApp.Core;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc.Razor;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<DapperContext>(); // Dapper
 builder.Services.InjectDependence(builder.Configuration); // Infrastructure Config
 builder.Services.RegisterServices(); //Core Config
 builder.Services.AddAuthentication(
@@ -33,6 +35,7 @@ builder.Services.AddSession(option =>
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseStatusCodePagesWithRedirects("/ErrorPage/{0}");

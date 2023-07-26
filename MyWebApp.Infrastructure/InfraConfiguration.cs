@@ -13,10 +13,11 @@ namespace MyWebApp.Infrastructure
         public static void InjectDependence(this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.AddSingleton<DapperContext>(); // Dapper
             services.AddDbContext<NCLS_SITContext>(options =>
             {
                 options.UseSqlServer(configuration.GetConnectionString(Constants.ConnnectionString.SqlServer));
-            });
+            }); // SQL SERVER
             services.AddTransient(typeof(IGenericRepository<>),typeof(GenericRepository<>));
             services.AddScoped<IProgramRepository, ProgramRepository>();
             services.AddScoped<IDashboardRepository, DashboardRepository>();
