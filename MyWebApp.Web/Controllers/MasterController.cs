@@ -14,133 +14,39 @@ namespace MyWebApp.Web.Controllers
     public class MasterController : Controller
     {
         private readonly IMasterService _service;
-        private readonly IPermissionService _permissionService;
-        Common common = new Common();
 
-        public MasterController(IMasterService service, IPermissionService permissionService)
+        public MasterController(IMasterService service)
         {
             _service = service;
-            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Index()
         {
-            var model = new MasterViewModel();
-            model.listMaster = await _service.GetListMasterActiveOnly();
-            model.permAdd = await _permissionService
-                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataAdd);
-            model.permEdit = await _permissionService
-                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataEdit);
-            model.permView = await _permissionService
-                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataView);
-
-            return View(model);
+            return View(await _service.getIndex());
         }
 
         [HttpPost]
         public async Task<IActionResult> GetList(MasterViewModel model)
         {
-            var response = new Response<List<MasterDTO>>();
-            try
-            {
-                response.value = await _service.Search(model);
-                response.status = Constants.Status.True;
-            }
-            catch (Exception ex)
-            {
-                response.status = Constants.Status.False;
-                response.message = ex.Message;
-            }
-
-            return new JsonResult(response);
+            return new JsonResult(await _service.Search(model));
         }
 
         [HttpPost]
-        public async Task<IActionResult> _Detail(
-            string code,
-            string action)
+        public async Task<IActionResult> _Detail(string code, string action)
         {
-            MasterViewModel model = new MasterViewModel();
-            try
-            {
-                if (code != null)
-                    model.masterDTO = await _service.GetByCode(code);
-
-                model.listMaster = await _service.GetListMasterActiveOnly();
-                model.action = action;
-                model.permAdd = await _permissionService
-                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserAdd);
-                model.permEdit = await _permissionService
-                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
-
-                return PartialView(model);
-            }
-            catch
-            {
-                throw;
-            }
+            return PartialView(await _service.getDetail(code, action));
         }
 
         [HttpPost]
         public async Task<IActionResult> Save(MasterViewModel model)
         {
-            var response = new Response<bool>();
-            try
-            {
-                if (model != null)
-                {
-                    if (model.action == Constants.Action.New)
-                    {
-                        response.value = await _service.Add(model.masterDTO);
-                        response.message = Constants.StatusMessage.Create_Action;
-                        response.status = Constants.Status.True;
-                    }
-                    else if (model.action == Constants.Action.Edit)
-                    {
-                        response.value = await _service.Update(model.masterDTO);
-                        response.message = Constants.StatusMessage.Update_Action;
-                        response.status = Constants.Status.True;
-                    }
-                    else
-                    {
-                        response.status = Constants.Status.False;
-                        response.message = Constants.StatusMessage.No_Data;
-                    }
-                }
-                else
-                {
-                    response.status = Constants.Status.False;
-                    response.message = Constants.StatusMessage.No_Data;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.status = Constants.Status.False;
-                response.message = ex.Message;
-            }
-
-            return new JsonResult(response);
+            return new JsonResult(await _service.Save(model));
         }
 
         [HttpPost]
         public async Task<IActionResult> Delete(string code)
         {
-            var response = new Response<bool>();
-            try
-            {
-                if (code != null)
-                {
-                    response.value = await _service.Delete(code);
-                    response.message = Constants.StatusMessage.Delete_Action;
-                    response.status = Constants.Status.True;
-                }
-            }
-            catch (Exception ex)
-            {
-                response.status = Constants.Status.False;
-                response.message = ex.Message;
-            }
-            return new JsonResult(response);
+            return new JsonResult(await _service.Delete(code));
         }
     }
 }

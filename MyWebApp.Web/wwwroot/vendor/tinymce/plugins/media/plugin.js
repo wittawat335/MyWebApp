@@ -708,12 +708,12 @@
       };
     };
     const addEmbedHtml = (api, editor) => response => {
-      if (isString(response.url) && response.url.trim().length > 0) {
+      if (isString(response.Url) && response.Url.trim().length > 0) {
         const html = response.html;
         const snippetData = htmlToData(html, editor.schema);
         const nuData = {
           ...snippetData,
-          source: response.url,
+          source: response.Url,
           embed: html
         };
         api.setData(wrap(nuData));

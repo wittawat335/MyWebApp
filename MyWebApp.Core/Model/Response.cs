@@ -13,4 +13,10 @@ namespace MyWebApp.Core.Model
         public string? message { get; set; }
         public string? url { get; set; }
     }
+
+    public class ResponseStatus
+    {
+        public bool Status { get; set; }
+        public string? Message { get; set; }
+    }
 }
