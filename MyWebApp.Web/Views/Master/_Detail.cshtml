@@ -1,9 +1,11 @@
 ﻿@using MyWebApp.Core.Model.ViewModels.Master;
+@using MyWebApp.Core.Services.Contract;
 @using MyWebApp.Core.Utility;
+@model MasterViewModel;
+@*@inject IPermissionService _service;*@
 @{
     var common = new Common();
 }
-@model MasterViewModel;
 
 <form id="frmDetail" role="form" method="post">
     <div class="form-group">

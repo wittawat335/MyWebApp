@@ -2,6 +2,8 @@
 using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.DTO;
+using MyWebApp.Core.Model;
+using MyWebApp.Core.Model.ViewModels.Master;
 using MyWebApp.Core.Model.ViewModels.User;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
@@ -15,34 +17,80 @@ namespace MyWebApp.Core.Services
         private readonly IGenericRepository<M_USER> _repository;
         private readonly IGenericRepository<M_USER_ROLE> _userRoleRepository;
         private readonly IGenericRepository<M_ROLE> _roleRepository;
+        private readonly IPermissionService _permissionService;
         private readonly IMapper _mapper;
         Common common = new Common();
-        public UserService(
-            IGenericRepository<M_USER> repository, 
-            IGenericRepository<M_USER_ROLE> userRoleRepository, 
-            IGenericRepository<M_ROLE> roleRepository, 
-            IMapper mapper)
+        public UserService(IGenericRepository<M_USER> repository, IGenericRepository<M_USER_ROLE> userRoleRepository, 
+            IGenericRepository<M_ROLE> roleRepository, IMapper mapper, IPermissionService permissionService)
         {
             _repository = repository;
             _roleRepository = roleRepository;
             _userRoleRepository = userRoleRepository;
+            _permissionService = permissionService;
             _mapper = mapper;
         }
 
-
-        public async Task<List<UserDTO>> GetAll()
+        public async Task<UserViewModel> getIndex()
         {
+            var model = new UserViewModel();
             try
             {
-                var list = await _repository.GetAll();
-                return _mapper.Map<List<UserDTO>>(list);
+                model.permAdd = await _permissionService
+                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataAdd);
+                model.permEdit = await _permissionService
+               .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataEdit);
+                model.permView = await _permissionService
+                    .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataView);
             }
             catch
             {
                 throw;
             }
-        }
 
+            return model;
+        }
+        public async Task<UserViewModel> getDetail(string code, string action)
+        {
+            var model = new UserViewModel();
+            try
+            {
+                if (code != null)
+                    model.userDTO = await GetByCode(code);
+
+                model.UserRoleList = await GetListRoleActiveOnly(model.userDTO == null ? "" : model.userDTO.USER_LOGIN);
+                model.permAdd = await _permissionService
+               .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserAdd);
+                model.permEdit = await _permissionService
+                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
+                model.action = action;
+
+            }
+            catch
+            {
+                throw;
+            }
+
+            return model;
+        }
+        public async Task<Response<List<UserDTO>>> GetAll()
+        {
+            var response = new Response<List<UserDTO>>();
+            try
+            {
+                var list = await _repository.GetAll();
+                if (list.Count() > 0)
+                {
+                    response.value = _mapper.Map<List<UserDTO>>(list);
+                    response.status = Constants.Status.True;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.message = ex.Message;
+            }
+
+            return response;
+        }
         public async Task<UserDTO> GetByCode(string code)
         {
             try
@@ -55,11 +103,9 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
-
-
-        public async Task<List<UserDTO>> Search(UserViewModel model)
+        public async Task<Response<List<UserDTO>>> Search(UserViewModel model)
         {
+            var response = new Response<List<UserDTO>>();
             try
             {
                 var list = await _repository.GetAll();
@@ -74,29 +120,86 @@ namespace MyWebApp.Core.Services
                     list = list.Where(x =>
                     x.USER_STATUS.Contains(model.status));
 
-
-                return _mapper.Map<List<UserDTO>>(list);
+                response.value = _mapper.Map<List<UserDTO>>(list);
+                response.status = Constants.Status.True;
             }
-            catch
+            catch (Exception ex)
             {
-                throw;
+                response.message = ex.Message;
             }
+
+            return response;
         }
-        public async Task<bool> Add(UserDTO model)
+        public async Task<ResponseStatus> Save(UserViewModel model)
         {
+            var response = new ResponseStatus();
+            try
+            {
+                if (model != null)
+                {
+                    if(model.roleSelect.Count(x => x.RoleFlag) > 0)
+                    {
+                        if(await CheckDuplicate(model.userDTO.USER_LOGIN))
+                        {
+                            switch (model.action)
+                            {
+                                case Constants.Action.New:
+                                    response = await Add(model.userDTO);
+                                    if (response.Status)
+                                        await AddRole(model.roleSelect, model.userDTO.USER_LOGIN);
+                                    break;
+
+                                case Constants.Action.Edit:
+                                    response = await Update(model.userDTO);
+                                    if (response.Status)
+                                        await AddRole(model.roleSelect, model.userDTO.USER_LOGIN);
+                                    break;
+
+                                default:
+                                    response.Status = Constants.Status.False;
+                                    response.Message = Constants.StatusMessage.No_Data;
+                                    break;
+                            }
+                        }
+                        else
+                        {
+                            response.Message = Constants.StatusMessage.Duplicate_User;
+                        }
+                    }
+                    else
+                    {
+                        response.Message = Constants.Msg.ValidateSelectRole;
+                    }
+                }
+                else
+                {
+                    response.Message = Constants.StatusMessage.No_Data;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<ResponseStatus> Add(UserDTO model)
+        {
+            var response = new ResponseStatus();
             try
             {
                 model.USER_PASSWORD = common.Encrypt(model.USER_PASSWORD);
-                var insert = await _repository.Add(_mapper.Map<M_USER>(model));
-
-                return true;
+                await _repository.Add(_mapper.Map<M_USER>(model));
+                response.Status = Constants.Status.True;
+                response.Message = Constants.StatusMessage.Create_Action;
             }
             catch
             {
                 throw;
             }
-        }
 
+            return response;
+        }
         public async Task<bool> AddRole(List<Role> model, string userLogin)
         {
             try
@@ -126,54 +229,47 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-        public async Task<bool> Update(UserDTO model)
+        public async Task<ResponseStatus> Update(UserDTO model)
         {
+            var response = new ResponseStatus();
             try
             {
-                var mapper = _mapper.Map<M_USER>(model);
-                var dataUpdate = await _repository.Get(x =>
-                x.USER_LOGIN == mapper.USER_LOGIN);
-                if (dataUpdate == null)
-                    throw new TaskCanceledException("No Data");
-                //dataUpdate = mapper; //รอดู
-                dataUpdate.USER_FIRST_NAME = mapper.USER_FIRST_NAME;
-                dataUpdate.USER_LAST_NAME = mapper.USER_LAST_NAME;
-                dataUpdate.USER_UPDATE_BY = mapper.USER_UPDATE_BY;
-                dataUpdate.USER_UPDATE_DATE = mapper.USER_UPDATE_DATE;
-                dataUpdate.USER_STATUS = mapper.USER_STATUS;
-
-                bool updated = await _repository.Update(dataUpdate);
-                if (!updated)
-                    throw new TaskCanceledException("Cannot Update Data");
-
-                return updated;
+                var find = await _repository.Get(x => x.USER_LOGIN == model.USER_LOGIN);
+                if (find != null)
+                {
+                    await _repository.Update(_mapper.Map(model, find));
+                    response.Status = Constants.Status.True;
+                    response.Message = Constants.StatusMessage.Update_Action;
+                }
             }
             catch
             {
                 throw;
             }
+            return response;
         }
-        public async Task<bool> Delete(string code)
+        public async Task<ResponseStatus> Delete(string code)
         {
-            bool deleted = false;
+            var response = new ResponseStatus();
             try
             {
                 var queryUser = await _repository.Get(x => x.USER_LOGIN == code);
-                var queryUserRole = await _userRoleRepository.GetAll(x => 
-                x.USERROLE_USER_LOGIN == code);
+                var queryUserRole = await _userRoleRepository.GetAll(x => x.USERROLE_USER_LOGIN == code);
+                if (queryUser != null)
+                {
+                    response.Status = await _repository.Delete(queryUser);
+                    if (queryUserRole.Count() > 0)
+                        await _userRoleRepository.DeleteList(queryUserRole.ToList());
 
-                if (queryUser == null)
-                    throw new TaskCanceledException("No Data");
-                             
-                if (deleted = await _repository.Delete(queryUser))
-                    deleted = await _userRoleRepository.DeleteList(queryUserRole.ToList());
-
-                return deleted;
+                    response.Message = Constants.StatusMessage.Delete_Action;
+                }
             }
             catch
             {
                 throw;
             }
+
+            return response;
         }
         public async Task<bool> CheckDuplicate(string code)
         {

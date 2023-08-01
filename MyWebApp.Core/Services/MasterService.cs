@@ -210,10 +210,11 @@ namespace MyWebApp.Core.Services
             {
                 var find = await _repository.Get(x => x.MASTER_CODE == model.MASTER_CODE);
                 if (find != null)
+                {
                     await _repository.Update(_mapper.Map(model, find));
-
-                response.Status = Constants.Status.True;
-                response.Message = Constants.StatusMessage.Create_Action;
+                    response.Status = Constants.Status.True;
+                    response.Message = Constants.StatusMessage.Update_Action;
+                }
             }
             catch
             {
@@ -231,7 +232,7 @@ namespace MyWebApp.Core.Services
                 if (query != null)
                 {
                     response.Status = await _repository.Delete(query);
-                    response.Message = Constants.StatusMessage.Create_Action;
+                    response.Message = Constants.StatusMessage.Delete_Action;
                 }            
             }
             catch

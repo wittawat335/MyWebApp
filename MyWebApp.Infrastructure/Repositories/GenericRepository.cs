@@ -58,7 +58,6 @@ namespace MyWebApp.Infrastructure.Repositories
                 throw;
             }
         }
-
         public async Task<bool> UpdateTest(T model)
         {
             try
