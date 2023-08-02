@@ -5,9 +5,14 @@ using Microsoft.AspNetCore.Http;
 using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.DTO;
+using MyWebApp.Core.Model.ViewModels;
+using MyWebApp.Core.Model;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
 using System.Security.Claims;
+using Newtonsoft.Json;
+using System.Security.Policy;
+using static MyWebApp.Core.Model.ViewModels.User.UserViewModel;
 
 namespace MyWebApp.Core.Services
 {
@@ -21,6 +26,9 @@ namespace MyWebApp.Core.Services
         private readonly IGenericRepository<T_LOGIN_HISTORY> _loginHistoryRepository;
         private readonly IGenericRepository<M_PROGRAM> _programRepository;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IUserService _userService;
+        private readonly IProgramService _programService;
+        private readonly IParameterService _parameterService;
         private readonly IMapper _mapper;
         Common common = new Common();
 
@@ -32,6 +40,9 @@ namespace MyWebApp.Core.Services
             IGenericRepository<M_PARAMETER> paraRepository,
             IGenericRepository<T_CURRENT_LOGIN> currentRepository,
             IGenericRepository<T_LOGIN_HISTORY> loginHistoryRepository,
+            IUserService userService,
+            IProgramService programService,
+            IParameterService parameterService,
             IHttpContextAccessor contextAccessor,
             IMapper mapper
            )
@@ -45,6 +56,9 @@ namespace MyWebApp.Core.Services
             _loginHistoryRepository = loginHistoryRepository;
             _mapper = mapper;
             _contextAccessor = contextAccessor;
+            _userService = userService;
+            _programService = programService;
+            _parameterService = parameterService;
         }
         public async Task<M_ROLE> getRoleBycurrentRole(string roleCode)
         {
@@ -58,7 +72,6 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
         public async Task<UserDTO> findUser(string userLogin)
         {
             try
@@ -71,7 +84,6 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
         public async Task<UserDTO> getUser(string userLogin, string password)
         {
             try
@@ -85,7 +97,6 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
         public async Task<bool> CheckUserPassOrAD(string userLogin, string password)
         {
             bool results = false;
@@ -114,9 +125,7 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
-        public async Task<List<T_CURRENT_LOGIN>> getListCurrentRole(string userLogin,
-            string ip = "")
+        public async Task<List<T_CURRENT_LOGIN>> getListCurrentRole(string userLogin, string ip = "")
         {
             var list = new List<T_CURRENT_LOGIN>();
             try
@@ -143,10 +152,7 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
-        public async Task<UserRoleDTO> getCurrentRoleList2(
-            string userLogin,
-            string roleCode)
+        public async Task<UserRoleDTO> getCurrentRoleList2(string userLogin, string roleCode)
         {
             var CheckRoleOld = new M_USER_ROLE();
             try
@@ -174,7 +180,6 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
         public async Task<long> InsertCurrentLogin()
         {            
             var userLogin = common.UserLogin;
@@ -213,7 +218,6 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
         public async Task<List<M_USER_ROLE>> getListUserRole(string userLogin = "")
         {
             try
@@ -226,7 +230,51 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
+        public async Task<Response<UserDTO>> Login(LoginViewModel obj)
+        {
+            var response = new Response<UserDTO>();
+            try
+            {
+                var ip = "192.128.101.1";
+                if (await CheckUserPassOrAD(obj.UserLogin, obj.Password))
+                {
+                    var currentRoleList = await getListCurrentRole(obj.UserLogin, ip);
+                    if (currentRoleList.Count() != 0)
+                    {
+                        var currentRole = currentRoleList.LastOrDefault();
+                        response.message = Constants.Msg.LoginDuplicate;
+                    }
+                    else
+                        response.message = Constants.Msg.LoginSucc;
 
+                    if (await GetRoleListByUserLogin(obj.UserLogin))
+                        response.status = Constants.Status.True;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<bool> GetRoleListByUserLogin(string userLogin)
+        {
+            try
+            {
+                var list = await _userService.GetListRoleActiveOnly(userLogin);
+                //-- Save list to session
+                string listString = JsonConvert.SerializeObject(list);
+                _contextAccessor.HttpContext.Session.SetString("RoleList", listString);
+
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
+        }
         public async Task<bool> SignIn(string userLogin, string role)
         {
             try
@@ -235,9 +283,7 @@ namespace MyWebApp.Core.Services
                     new Claim(ClaimTypes.NameIdentifier, userLogin),
                     new Claim(ClaimTypes.Role, role)
                 };
-                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims,
-                 CookieAuthenticationDefaults.AuthenticationScheme);
-
+                ClaimsIdentity claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
                 AuthenticationProperties properties = new AuthenticationProperties()
                 {
 
@@ -254,6 +300,157 @@ namespace MyWebApp.Core.Services
             {
                 throw;
             }
+        }
+        public async Task<bool> SetSessionLogin(string userLogin, string userName, string roleCode, string roleName, int dataLevel)
+        {
+            try
+            {
+                common.SetLoginSession(0, userLogin, userName, roleCode, roleName, dataLevel);
+                common.SetLoginSession(await InsertCurrentLogin(), userLogin, userName, roleCode, roleName, dataLevel);
+
+                return true;
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+        }
+        public async Task<Response<UserDTO>> CheckLogin(LoginViewModel obj)
+        {
+            string msg = "Invalid user name or password";
+            string initUrl = "~/Home/Index";
+            string url = initUrl;
+            string userAD = obj.UserLogin;
+            var response = new Response<UserDTO>();
+            try
+            {
+                var colUser = await findUser(userAD);
+                if (colUser != null && colUser.USER_STATUS == Constants.Status.Active)
+                {
+                    //Set Config
+                    var sysdate = await _parameterService.GetByCode(Constants.ParaCode.sysDate);
+                    var pageSize = await _parameterService.GetByCode(Constants.ParaCode.pageSize);
+                    string userName = colUser.USER_FIRST_NAME + " " + colUser.USER_LAST_NAME;
+                    _contextAccessor.HttpContext.Session.SetString("SysDate", sysdate.PARA_VALUE);
+
+                    //Check ว่าเคย Login เข้าระบบ ด้วย Role ไหนมาก่อนหรือไม่ ?
+                    var currentRoleList = await getListCurrentRole(userAD);
+                    if (!currentRoleList.Count.Equals(0))
+                    {
+                        var currentRole = currentRoleList.LastOrDefault();
+                        var roleNow = await getRoleBycurrentRole(currentRole.CL_ROLE_CODE);
+                        var CheckRoleOld = await getCurrentRoleList2(userAD, currentRole.CL_ROLE_CODE);
+                        if (CheckRoleOld != null)
+                        {
+                            response.status = await SetSessionLogin(userAD, userName, roleNow.ROLE_CODE, roleNow.ROLE_NAME,
+                                roleNow.ROLE_DATA_LEVEL);
+                            if (response.status)
+                            {
+                                if (await SignIn(userAD, roleNow.ROLE_CODE))
+                                {
+                                    response.url = await _programService.GetMeneDefaultAsync(roleNow.ROLE_CODE);
+                                    response.message = Constants.Msg.LoginSucc;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            await CheckRoleLogin(userAD, userName, roleNow.ROLE_CODE);
+                        }
+                    }
+                    else
+                    {
+                        await CheckRoleLogin(userAD, userName, "");
+                    }
+                }
+                else if (colUser != null && colUser.USER_STATUS == Constants.Status.Inactive)
+                {
+                    response.status = Constants.Status.False;
+                    response.message = Constants.Msg.UserInActive;
+                }
+                else //Check User ใน System ถ้าไม่มี ?
+                {
+                    response.status = Constants.Status.False;
+                    response.message = Constants.Msg.UserNameInvalid;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = ex.Message;
+            }
+            return response;
+        }
+
+        public async Task<Response<Role>> SelectRole(string role)
+        {
+            var response = new Response<Role>();
+            string? userLogin = common.UserLogin;
+            string? userName = common.UserName;
+            try
+            {
+                if (role != null)
+                {
+                    var obj = await getRoleBycurrentRole(role);
+                    await SetSessionLogin(userLogin, userName, obj.ROLE_CODE, obj.ROLE_NAME, obj.ROLE_DATA_LEVEL);
+                    response.url = await _programService.GetMeneDefaultAsync(role);
+                    response.status = Constants.Status.True;
+                    response.message = Constants.Msg.SwitchRoleSucc;
+                }
+                else
+                {
+                    response.status = Constants.Status.False;
+                    response.message = Constants.Msg.SwitchRoleFail;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<Response<UserDTO>> CheckRoleLogin(string user, string userName, string roleCode)
+        {
+            var response = new Response<UserDTO>();
+            try
+            {
+                var countRole = await getListUserRole(user);
+                if (countRole.Count.Equals(1)) //Check Role = 1 ?
+                {
+                    foreach (var r in countRole)
+                    {
+                        var roles = await getRoleBycurrentRole(r.USERROLE_ROLE_CODE);
+                        response.status = await SetSessionLogin(user, userName, roles.ROLE_CODE, roles.ROLE_NAME, 
+                            roles.ROLE_DATA_LEVEL);
+                        if (response.status)
+                        {
+                            await SignIn(user, roleCode);
+                            response.url = await _programService.GetMeneDefaultAsync(roles.ROLE_CODE);
+                        }
+
+                    }
+                    response.message = Constants.Msg.LoginSucc;
+                }
+                else if (countRole.Count > 1) //Check Role > 1 ?
+                {
+                    var listRole = await _userService.GetListRoleActiveOnly(user);
+                    var defaultRole = listRole.FirstOrDefault(x => x.RoleFlag);
+                    var roless = await getRoleBycurrentRole(defaultRole.RoleCode);
+                    response.status = await SetSessionLogin(user, userName, roless.ROLE_CODE, roless.ROLE_NAME, roless.ROLE_DATA_LEVEL);
+                    response.url = await _programService.GetMeneDefaultAsync(roless.ROLE_CODE);
+                    response.message = Constants.Msg.LoginSucc;
+                }
+            }
+            catch(Exception ex)
+            {
+                response.message = ex.Message;
+            }
+            return response;
         }
     }
 }
