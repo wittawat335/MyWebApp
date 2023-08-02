@@ -13,14 +13,9 @@ namespace MyWebApp.Web.Controllers
     public class RoleController : Controller
     {
         private readonly IRoleService _service;
-        private readonly IPermissionService _permissionService;
-        private readonly IHttpContextAccessor _contextAccessor;
-        Common common = new Common();
-        public RoleController(IRoleService service, IPermissionService permissionService, IHttpContextAccessor contextAccessor)
+        public RoleController(IRoleService service)
         {
             _service = service;
-            _permissionService = permissionService;
-            _contextAccessor = contextAccessor;
         }
         public async Task<IActionResult> Index()
         {
