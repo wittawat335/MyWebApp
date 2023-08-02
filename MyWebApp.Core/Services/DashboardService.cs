@@ -3,6 +3,7 @@ using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.Model.ViewModels.Dashboard;
 using MyWebApp.Core.Services.Contract;
+using MyWebApp.Core.Utility;
 
 namespace MyWebApp.Core.Services
 {
@@ -13,13 +14,10 @@ namespace MyWebApp.Core.Services
         private readonly IGenericRepository<M_MASTER> _masterRepository;
         private readonly IGenericRepository<M_STATUS> _statusRepository;
         private readonly IDashboardRepository _repository;
+        Common common = new Common();
 
-        public DashboardService(
-            IGenericRepository<T_R3_DETAIL> r3Repository,
-            IGenericRepository<T_JOB_REPO> repoRepository,
-            IGenericRepository<M_MASTER> masterRepository,
-            IGenericRepository<M_STATUS> statusRepository,
-        IDashboardRepository repository)
+        public DashboardService(IGenericRepository<T_R3_DETAIL> r3Repository, IGenericRepository<T_JOB_REPO> repoRepository,
+            IGenericRepository<M_MASTER> masterRepository, IGenericRepository<M_STATUS> statusRepository, IDashboardRepository repository)
         {
             _statusRepository = statusRepository;
             _repoRepository = repoRepository;
@@ -27,7 +25,57 @@ namespace MyWebApp.Core.Services
             _r3Repository = r3Repository;
             _repository = repository;
         }
+        public async Task<List<Charts>> ChartsR3()
+        {
+            var objList = new List<Charts>();
+            try
+            {
+                List<ChartsSP> result = await GetChartsR3();
 
+                foreach (var item in result)
+                {
+                    objList.Add(new Charts()
+                    {
+                        id = item.ID,
+                        text = item.TEXT,
+                        value = common.UnInt32Null(item.VALUE),
+                        color = item.COLOR
+                    });
+                }
+
+                return objList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
+
+        public async Task<List<Charts>> ChartsRepo()
+        {
+            var objList = new List<Charts>();
+            try
+            {
+                List<ChartsSP> result = await GetChartsRepo();
+
+                foreach (var item in result)
+                {
+                    objList.Add(new Charts()
+                    {
+                        id = item.ID,
+                        text = item.TEXT,
+                        value = common.UnInt32Null(item.VALUE),
+                        color = item.COLOR
+                    });
+                }
+
+                return objList;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+        }
         public async Task<List<object>> GetTotal()
         {
             IQueryable<T_R3_DETAIL> tbR3 = await _r3Repository.GetAll(x => x.R3_CASE_STATUS == "R330");
@@ -69,7 +117,6 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-
         public async Task<List<ChartsSP>> GetChartsRepo()
         {
             try

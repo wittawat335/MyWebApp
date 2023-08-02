@@ -62,11 +62,5 @@ namespace MyWebApp.Web.Controllers
             }
            
         }
-
-        //[HttpPost]
-        //public IActionResult _popUpTracking(string mode, string code, string contractNo)
-        //{          
-        //    return PartialView();
-        //}
     }
 }

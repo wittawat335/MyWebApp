@@ -11,6 +11,7 @@ namespace MyWebApp.Core.Model.ViewModels.Program
     public class ProgramViewModel
     {
         public M_PROGRAM program { get; set; }
+        public ProgramDTO ProgramDTO { get; set; }
         public string? action { get; set; }
 
         public class SP_GET_MENU_BY_ROLE_Result
@@ -26,6 +27,7 @@ namespace MyWebApp.Core.Model.ViewModels.Program
         public ProgramViewModel()
         {
             program = new M_PROGRAM();
+            ProgramDTO = new ProgramDTO();
         }
     }
 }

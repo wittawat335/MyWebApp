@@ -2,6 +2,8 @@
 using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.DTO;
+using MyWebApp.Core.Model;
+using MyWebApp.Core.Model.ViewModels.Program;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
 
@@ -25,7 +27,98 @@ namespace MyWebApp.Core.Services
             _mapper = mapper;
             _actRepository = actRepository;
         }
+        public async Task<Response<List<M_PROGRAM>>> GetList()
+        {
+            var response = new Response<List<M_PROGRAM>>();
+            try
+            {
+                response.value = await GetAll();
+                response.status = Constants.Status.True;
+            }
+            catch (Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = ex.Message;
+            }
 
+            return response;
+        }
+
+        public async Task<ProgramViewModel> Detail(string code, string action)
+        {
+            ProgramViewModel model = new ProgramViewModel();
+            try
+            {
+                if (code != null)
+                    model.program = await GetByCode(code);
+
+                model.action = action;
+
+                return model;
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        public async Task<ResponseStatus> Save(ProgramViewModel model)
+        {
+            var response = new ResponseStatus();
+            try
+            {
+                if (model != null)
+                {
+                    switch (model.action)
+                    {
+                        case Constants.Action.New:
+                            response.Status = await Add(model.program);
+                            response.Message = Constants.StatusMessage.Create_Action;
+                            break;
+
+                        case Constants.Action.Edit:
+                            response.Status = await Update(_mapper.Map<ProgramDTO>(model.program));
+                            response.Message = Constants.StatusMessage.Update_Action;
+                            break;
+
+                        default:
+                            response.Status = Constants.Status.False;
+                            response.Message = Constants.StatusMessage.No_Data;
+                            break;
+                    }
+                }
+                else
+                {
+                    response.Status = Constants.Status.False;
+                    response.Message = Constants.StatusMessage.No_Data;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Status = Constants.Status.False;
+                response.Message = ex.Message;
+            }
+
+            return response;
+        }
+        public async Task<ResponseStatus> sendDelete(string code)
+        {
+            var response = new ResponseStatus();
+            try
+            {
+                if (code != null)
+                {
+                    response.Status = await Delete(code);
+                    response.Message = Constants.StatusMessage.Delete_Action;
+                }
+            }
+            catch (Exception ex)
+            {
+                response.Status = Constants.Status.False;
+                response.Message = ex.Message;
+            }
+            return response;
+        }
         public async Task<List<M_PROGRAM>> GetAll()
         {
             try
@@ -55,8 +148,7 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var query = await
-                    _programRepository.Add(model);
+                var query = await _programRepository.Add(model);
                 return true;
             }
             catch
@@ -64,7 +156,7 @@ namespace MyWebApp.Core.Services
                 throw;
             }
         }
-        public async Task<bool> Update(M_PROGRAM model)
+        public async Task<bool> Update(ProgramDTO model)
         {
             bool result = false;
             try
@@ -76,7 +168,7 @@ namespace MyWebApp.Core.Services
                     {
                         var updatePerMission = await _perRepository.GetAll(x => x.PERM_PROG_CODE == model.PROG_CODE);
                         var updateAction = await _actRepository.GetAll(x => x.ACT_PROG_CODE == model.PROG_CODE);
-                        if (updatePerMission.ToList().Count() > 0) //Update Status M_PROGRAM
+                        if (updatePerMission.ToList().Count() > 0) //Update Status M_PERMISSION
                         {
                             foreach (var item in updatePerMission) 
                             {
@@ -84,7 +176,7 @@ namespace MyWebApp.Core.Services
                                 item.PERM_UPDATE_BY = model.PROG_UPDATE_BY;
                                 item.PERM_UPDATE_DATE = model.PROG_UPDATE_DATE;
 
-                               await _perRepository.Update(item);
+                                await _perRepository.Update(item);
                             }
                         }
                         if (updateAction.ToList().Count() > 0) //Update Status M_ACTION
@@ -99,19 +191,7 @@ namespace MyWebApp.Core.Services
                             }
                         }
                     }
-                    updateProgram.PROG_NAME = model.PROG_NAME;
-                    updateProgram.PROG_LEVEL = model.PROG_LEVEL;
-                    updateProgram.PROG_PARENT_CODE = model.PROG_PARENT_CODE;
-                    updateProgram.PROG_TARGET_URL = model.PROG_TARGET_URL;
-                    updateProgram.PROG_ORDER = model.PROG_ORDER;
-                    updateProgram.PROG_ICON = model.PROG_ICON;
-                    updateProgram.PROG_CREATE_BY = model.PROG_CREATE_BY;
-                    updateProgram.PROG_CREATE_DATE = model.PROG_CREATE_DATE;
-                    updateProgram.PROG_UPDATE_BY = model.PROG_UPDATE_BY;
-                    updateProgram.PROG_UPDATE_DATE = model.PROG_UPDATE_DATE;
-                    updateProgram.PROG_STATUS = model.PROG_STATUS;
-
-                    result = await _programRepository.Update(updateProgram);
+                    result = await _programRepository.Update(_mapper.Map(model, updateProgram));
                 }
 
                 return result;
