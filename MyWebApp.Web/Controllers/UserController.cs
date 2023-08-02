@@ -14,13 +14,10 @@ namespace MyWebApp.Web.Controllers
     public class UserController : Controller
     {
         private readonly IUserService _service;
-        private readonly IPermissionService _permissionService;
-        Common common = new Common();
 
-        public UserController(IUserService service, IPermissionService permissionService)
+        public UserController(IUserService service)
         {
             _service = service;
-            _permissionService = permissionService;
         }
 
         public async Task<IActionResult> Index()

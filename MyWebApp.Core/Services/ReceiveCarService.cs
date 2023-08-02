@@ -1,5 +1,6 @@
 ﻿using MyWebApp.Core.Domain.Entities;
 using MyWebApp.Core.Domain.RepositoryContracts;
+using MyWebApp.Core.Model;
 using MyWebApp.Core.Services.Contract;
 using MyWebApp.Core.Utility;
 using OfficeOpenXml;
@@ -34,6 +35,41 @@ namespace MyWebApp.Core.Services
             {
                 throw;
             }
+        }
+
+        public async Task<Response<List<SP_SEARCH_RC_Result>>> GetList(SearchModel model)
+        {
+            var response = new Response<List<SP_SEARCH_RC_Result>>();
+            try
+            {
+                response.value = await GetAllbySp(model);
+                response.status = Constants.Status.True;
+            }
+            catch (Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = ex.Message;
+            }
+
+            return response;
+        }
+
+        public async Task<Response<FileUploadModel>> Save(List<FileUploadModel> model)
+        {
+            var response = new Response<FileUploadModel>();
+            try
+            {
+                if (model.Count() > 0)
+                    response.status = await SaveFile(model);
+
+                response.message = Constants.StatusMessage.Update_Action;
+            }
+            catch (Exception ex)
+            {
+                response.status = Constants.Status.False;
+                response.message = ex.Message;
+            }
+            return response;
         }
 
         public async Task<List<T_JOB_REPO>> GetAll()

@@ -1,5 +1,11 @@
 ﻿@using MyWebApp.Core.Model.ViewModels.ReceiveCar;
+@using MyWebApp.Core.Services.Contract;
+@using MyWebApp.Core.Utility;
 @model ReceiveCarViewModel;
+@inject IPermissionService _service;
+@{
+    var common = new Common();
+}
 <div class="card">
     <div class="card-body">
         <form>

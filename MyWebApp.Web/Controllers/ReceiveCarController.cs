@@ -29,48 +29,13 @@ namespace MyWebApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> GetList(SearchModel model)
         {
-            var response = new Response<List<SP_SEARCH_RC_Result>>();
-            try
-            {
-                response.value = await _service.GetAllbySp(model);
-                response.status = Constants.Status.True;
-            }
-            catch(Exception ex)
-            {
-                response.status = Constants.Status.False;
-                response.message = ex.Message;  
-            }
-
-            return new JsonResult(response);
+            return new JsonResult(await _service.GetList(model));
         }
 
         [HttpPost]
-        public async Task<IActionResult> SaveFile(
-            List<FileUploadModel> model)
+        public async Task<IActionResult> SaveFile(List<FileUploadModel> model)
         {
-            var response = new Response<FileUploadModel>();
-            try
-            {
-                if (model.Count() > 0)
-                    response.status = await _service.SaveFile(model);
-                
-                response.message = Constants.StatusMessage.Update_Action;
-            }
-            catch (Exception ex)
-            {
-                response.status = Constants.Status.False;
-                response.message = ex.Message;
-            }
-            return new JsonResult(response);
-        }
-
-        [HttpPost]
-        public IActionResult _popUpTracking(
-            string mode, 
-            string code, 
-            string contractNo)
-        {          
-            return PartialView();
+            return new JsonResult(await _service.Save(model));
         }
 
         [HttpPost]
@@ -97,5 +62,11 @@ namespace MyWebApp.Web.Controllers
             }
            
         }
+
+        //[HttpPost]
+        //public IActionResult _popUpTracking(string mode, string code, string contractNo)
+        //{          
+        //    return PartialView();
+        //}
     }
 }

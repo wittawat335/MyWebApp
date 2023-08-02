@@ -13,13 +13,10 @@ namespace MyWebApp.Web.Controllers
     public class ParameterController : Controller
     {
         private readonly IParameterService _parameterService;
-        private readonly IPermissionService _permissionService;
-        Common common = new Common();
 
-        public ParameterController(IParameterService parameterService, IPermissionService permissionService)
+        public ParameterController(IParameterService parameterService)
         {
             _parameterService = parameterService;
-            _permissionService = permissionService;
         }
 
         public IActionResult Index()
@@ -30,47 +27,13 @@ namespace MyWebApp.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> _Detail(string action)
         {
-            var model = new ParameterViewModel();
-            try
-            {
-                model.ParameterList = await _parameterService.GetAll();
-                if(action == "Default")
-                {
-                    foreach (var m in model.ParameterList)
-                    {
-                        m.PARA_VALUE = m.PARA_DEFAULT_VALUE;
-                    }
-                }
-              
-                model.permEdit = await _permissionService
-                    .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataEdit);
-               
-                model.action = Constants.Action.Edit;
-                
-                return PartialView(model);
-            }
-            catch
-            {
-                throw;
-            }
+            return PartialView(await _parameterService.GetAll(action));
         }
 
         [HttpPost]
         public async Task<IActionResult> Save(List<M_PARAMETER> Para)
         {
-            var response = new Response<List<M_PARAMETER>>();
-            try
-            {
-                response.status = await _parameterService.Save(Para);
-                response.message = Constants.StatusMessage.Update_Action;
-            }
-            catch (Exception)
-            {
-                response.status = Constants.Status.False;
-                response.message = Constants.StatusMessage.Cannot_Update_Data;
-            }
-
-             return new JsonResult(response);
+            return new JsonResult(await _parameterService.postSave(Para));
         }
     }
 }

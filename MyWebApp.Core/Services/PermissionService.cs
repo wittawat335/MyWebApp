@@ -23,8 +23,8 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var model = await _repository.GetAll(x => x.PERM_ROLE_CODE == userRole
-                && x.PERM_ACT_CODE == actCode && x.PERM_PROG_CODE == programCode);
+                var model = await _repository.GetAll(x => x.PERM_ROLE_CODE == userRole && x.PERM_ACT_CODE == actCode 
+                && x.PERM_PROG_CODE == programCode);
 
                 if (model.ToList().Count > 0)
                     return true;
