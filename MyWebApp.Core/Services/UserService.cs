@@ -20,7 +20,7 @@ namespace MyWebApp.Core.Services
         private readonly IPermissionService _permissionService;
         private readonly IMapper _mapper;
         Common common = new Common();
-        public UserService(IGenericRepository<M_USER> repository, IGenericRepository<M_USER_ROLE> userRoleRepository, 
+        public UserService(IGenericRepository<M_USER> repository, IGenericRepository<M_USER_ROLE> userRoleRepository,
             IGenericRepository<M_ROLE> roleRepository, IMapper mapper, IPermissionService permissionService)
         {
             _repository = repository;
@@ -137,33 +137,33 @@ namespace MyWebApp.Core.Services
             {
                 if (model != null)
                 {
-                    if(model.roleSelect.Count(x => x.RoleFlag) > 0)
+                    if (model.roleSelect.Count(x => x.RoleFlag) > 0)
                     {
-                        if(await CheckDuplicate(model.userDTO.USER_LOGIN))
+                        switch (model.action)
                         {
-                            switch (model.action)
-                            {
-                                case Constants.Action.New:
+                            case Constants.Action.New:
+                                if (await CheckDuplicate(model.userDTO.USER_LOGIN))
+                                {
                                     response = await Add(model.userDTO);
                                     if (response.Status)
                                         await AddRole(model.roleSelect, model.userDTO.USER_LOGIN);
-                                    break;
+                                }
+                                else
+                                {
+                                    response.Message = Constants.StatusMessage.Duplicate_User;
+                                }
+                                break;
 
-                                case Constants.Action.Edit:
-                                    response = await Update(model.userDTO);
-                                    if (response.Status)
-                                        await AddRole(model.roleSelect, model.userDTO.USER_LOGIN);
-                                    break;
+                            case Constants.Action.Edit:
+                                response = await Update(model.userDTO);
+                                if (response.Status)
+                                    await AddRole(model.roleSelect, model.userDTO.USER_LOGIN);
+                                break;
 
-                                default:
-                                    response.Status = Constants.Status.False;
-                                    response.Message = Constants.StatusMessage.No_Data;
-                                    break;
-                            }
-                        }
-                        else
-                        {
-                            response.Message = Constants.StatusMessage.Duplicate_User;
+                            default:
+                                response.Status = Constants.Status.False;
+                                response.Message = Constants.StatusMessage.No_Data;
+                                break;
                         }
                     }
                     else
@@ -207,11 +207,11 @@ namespace MyWebApp.Core.Services
                 if (model.Count > 0)
                 {
                     var findUser = await _userRoleRepository.GetAll(x => x.USERROLE_USER_LOGIN == userLogin);
-                    await _userRoleRepository.DeleteList(findUser.ToList()); 
-                   
+                    await _userRoleRepository.DeleteList(findUser.ToList());
+
                     foreach (var item in model.Where(x => x.RoleFlag))
                     {
-                        var userRole = new M_USER_ROLE();                       
+                        var userRole = new M_USER_ROLE();
                         userRole.USERROLE_USER_LOGIN = userLogin;
                         userRole.USERROLE_ROLE_CODE = item.RoleCode;
                         userRole.USERROLE_CREATE_BY = common.UserLogin;
@@ -304,8 +304,8 @@ namespace MyWebApp.Core.Services
                               {
                                   RoleCode = m.ROLE_CODE,
                                   RoleName = m.ROLE_NAME,
-                                  UserLogin = d == null ? 
-                                  string.Empty : 
+                                  UserLogin = d == null ?
+                                  string.Empty :
                                   d.USERROLE_USER_LOGIN,
                                   RoleFlag = d == null ? false : true
                               }
