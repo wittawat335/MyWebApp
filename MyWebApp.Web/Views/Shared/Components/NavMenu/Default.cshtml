@@ -1,14 +1,11 @@
 ﻿@using MyWebApp.Core.DTO;
 @model List<ProgramDTO>
 @{
-    var menuLv1 = ((List<ProgramDTO>)Model)
-    .Where(x => x.PROG_LEVEL == 1 && x.PROG_STATUS == "A");
-    var menuLv2 = ((List<ProgramDTO>)Model)
-    .Where(x => x.PROG_LEVEL == 2 && x.PROG_STATUS == "A");
-    var menuLv3 = ((List<ProgramDTO>)Model)
-    .Where(x => x.PROG_LEVEL == 3 && x.PROG_STATUS == "A");
+    var menuLv1 = ((List<ProgramDTO>)Model).Where(x => x.PROG_LEVEL == 1);
+    var menuLv2 = ((List<ProgramDTO>)Model).Where(x => x.PROG_LEVEL == 2);
+    var menuLv3 = ((List<ProgramDTO>)Model).Where(x => x.PROG_LEVEL == 3);
 }
-<aside id="sidebar" class="sidebar">
+<aside id="sidebar" class="sidebar mx-auto">
     <ul class="sidebar-nav" id="sidebar-nav">
         @foreach (var lv1 in menuLv1.OrderBy(x => x.PROG_ORDER)) //LV 1
         {

@@ -20,8 +20,8 @@ namespace MyWebApp.Core.Services
         private readonly IPermissionService _permissionService;
         private readonly IMapper _mapper;
         Common common = new Common();
-        public UserService(IGenericRepository<M_USER> repository, IGenericRepository<M_USER_ROLE> userRoleRepository,
-            IGenericRepository<M_ROLE> roleRepository, IMapper mapper, IPermissionService permissionService)
+        public UserService(IGenericRepository<M_USER> repository, IGenericRepository<M_USER_ROLE> userRoleRepository, IGenericRepository<M_ROLE> roleRepository, 
+            IMapper mapper, IPermissionService permissionService)
         {
             _repository = repository;
             _roleRepository = roleRepository;
@@ -35,12 +35,12 @@ namespace MyWebApp.Core.Services
             var model = new UserViewModel();
             try
             {
-                model.permAdd = await _permissionService
-                .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataAdd);
-                model.permEdit = await _permissionService
-               .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataEdit);
-                model.permView = await _permissionService
-                    .GetPermission(common.UserRole, Constants.ProgramCode.MasterData, Constants.ActCode.MasterDataView);
+                model.permAdd = await _permissionService.GetPermission(common.UserRole, Constants.ProgramCode.MasterData, 
+                    Constants.ActCode.MasterDataAdd);
+                model.permEdit = await _permissionService.GetPermission(common.UserRole, Constants.ProgramCode.MasterData, 
+                    Constants.ActCode.MasterDataEdit);
+                model.permView = await _permissionService.GetPermission(common.UserRole, Constants.ProgramCode.MasterData, 
+                    Constants.ActCode.MasterDataView);
             }
             catch
             {
@@ -58,10 +58,9 @@ namespace MyWebApp.Core.Services
                     model.userDTO = await GetByCode(code);
 
                 model.UserRoleList = await GetListRoleActiveOnly(model.userDTO == null ? "" : model.userDTO.USER_LOGIN);
-                model.permAdd = await _permissionService
-               .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserAdd);
-                model.permEdit = await _permissionService
-                    .GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
+                model.permAdd = await _permissionService.GetPermission(common.UserRole, Constants.ProgramCode.User, 
+                    Constants.ActCode.UserAdd);
+                model.permEdit = await _permissionService.GetPermission(common.UserRole, Constants.ProgramCode.User, Constants.ActCode.UserEdit);
                 model.action = action;
 
             }

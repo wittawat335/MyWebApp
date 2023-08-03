@@ -58,8 +58,7 @@
                         @Html.TextBox("roleSelect[" + @i + "].RoleCode", m.RoleCode)
                     </div>
                     <div class="form-check">
-                        @Html.CheckBox("roleSelect[" + @i + "].RoleFlag", m.RoleFlag, 
-                        new { @class = "form-check-input"})
+                        @Html.CheckBox("roleSelect[" + @i + "].RoleFlag", m.RoleFlag, new { @class = "form-check-input"})
                         <label class="form-check-label" for="checkbox_@m.RoleCode">
                             @m.RoleName
                         </label>

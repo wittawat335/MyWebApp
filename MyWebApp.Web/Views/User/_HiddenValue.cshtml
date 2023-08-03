@@ -5,6 +5,9 @@
 }
 @model UserViewModel;
 <input type="text" name="userDTO.USER_LOGIN" value='@Model.userDTO.USER_LOGIN' />
+@if(Model.userDTO.USER_PASSWORD != null){
+    <input type="text" name="userDTO.USER_PASSWORD" value='@Model.userDTO.USER_PASSWORD' />
+}
 <input type="text" name="userDTO.USER_CREATE_BY" value='@common.UserLogin' />
 <input type="datetime" name="userDTO.USER_CREATE_DATE" value='@common.SystemDate' />
 <input type="text" name="userDTO.USER_UPDATE_BY" value='@common.UserLogin' />

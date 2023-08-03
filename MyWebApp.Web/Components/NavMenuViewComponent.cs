@@ -31,15 +31,14 @@ namespace MyWebApp.Web.Components
             var code = "";
             try
             {          
-                string sessionString = HttpContext.Session
-                    .GetString(Constants.SessionKey.LoginInfo);
+                string sessionString = HttpContext.Session.GetString(Constants.SessionKey.LoginInfo);
                 if (sessionString != null) 
                     logInInfo = JsonConvert.DeserializeObject<LoginInfo>(sessionString);
 
                 if (logInInfo.Role != null)
                     code = logInInfo.Role;               
                 else
-                    code = "CO";
+                    code = "MA";
                 
                 menu = await _programService.GetByRoleAsync(code);
 

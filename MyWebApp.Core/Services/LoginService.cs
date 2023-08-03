@@ -21,10 +21,8 @@ namespace MyWebApp.Core.Services
         private readonly IGenericRepository<M_USER_ROLE> _userRoleRepository;
         private readonly IGenericRepository<M_USER> _userRepository;
         private readonly IGenericRepository<M_ROLE> _roleRepository;
-        private readonly IGenericRepository<M_PARAMETER> _paraRepository;
         private readonly IGenericRepository<T_CURRENT_LOGIN> _currentRepository;
         private readonly IGenericRepository<T_LOGIN_HISTORY> _loginHistoryRepository;
-        private readonly IGenericRepository<M_PROGRAM> _programRepository;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IUserService _userService;
         private readonly IProgramService _programService;
@@ -34,10 +32,8 @@ namespace MyWebApp.Core.Services
 
         public LoginService(
             IGenericRepository<M_USER_ROLE> userRoleRepository,
-            IGenericRepository<M_PROGRAM> programRepository,
             IGenericRepository<M_USER> userRepository,
             IGenericRepository<M_ROLE> roleRepository,
-            IGenericRepository<M_PARAMETER> paraRepository,
             IGenericRepository<T_CURRENT_LOGIN> currentRepository,
             IGenericRepository<T_LOGIN_HISTORY> loginHistoryRepository,
             IUserService userService,
@@ -47,11 +43,9 @@ namespace MyWebApp.Core.Services
             IMapper mapper
            )
         {
-            _programRepository = programRepository;
             _userRoleRepository = userRoleRepository;
             _userRepository = userRepository;
             _roleRepository = roleRepository;
-            _paraRepository = paraRepository;
             _currentRepository = currentRepository;
             _loginHistoryRepository = loginHistoryRepository;
             _mapper = mapper;
@@ -104,23 +98,22 @@ namespace MyWebApp.Core.Services
             string typeUser = "0";
             try
             {
-                var colUser = await _userRepository
-                    .Get(x => x.USER_LOGIN == userLogin && x.USER_STATUS == Constants.Status.Active);
+                var colUser = await _userRepository.Get(x => x.USER_LOGIN == userLogin && x.USER_STATUS == Constants.Status.Active);
                 if (colUser != null)
                 {
                     typeUser = colUser.USER_AD_FLAG;
                     passworden = common.Encrypt(password);
-                    if(colUser.USER_PASSWORD == passworden)
+                    if (colUser.USER_PASSWORD == passworden)
                         results = true;
                     else
                         throw new TaskCanceledException(Constants.Msg.PasswordInvalid);
                 }
-                else                   
+                else
                     throw new TaskCanceledException(Constants.Msg.UserNameInvalid);
-               
+
                 return results;
             }
-            catch 
+            catch
             {
                 throw;
             }
@@ -181,17 +174,17 @@ namespace MyWebApp.Core.Services
             }
         }
         public async Task<long> InsertCurrentLogin()
-        {            
+        {
             var userLogin = common.UserLogin;
             var userRole = common.UserRole;
             var Ip = common.Ip;
             var systemDate = common.SystemDate;
             try
             {
-                var query = await _currentRepository.GetAll(x => x.CL_USER_LOGIN == userLogin);          
+                var query = await _currentRepository.GetAll(x => x.CL_USER_LOGIN == userLogin);
                 if (query != null)
                     await _currentRepository.DeleteList(query.ToList());
-           
+
                 var model = new T_CURRENT_LOGIN();
                 model.CL_USER_LOGIN = userLogin;
                 model.CL_ROLE_CODE = userRole;
@@ -425,7 +418,7 @@ namespace MyWebApp.Core.Services
                     foreach (var r in countRole)
                     {
                         var roles = await getRoleBycurrentRole(r.USERROLE_ROLE_CODE);
-                        response.status = await SetSessionLogin(user, userName, roles.ROLE_CODE, roles.ROLE_NAME, 
+                        response.status = await SetSessionLogin(user, userName, roles.ROLE_CODE, roles.ROLE_NAME,
                             roles.ROLE_DATA_LEVEL);
                         if (response.status)
                         {
@@ -446,7 +439,7 @@ namespace MyWebApp.Core.Services
                     response.message = Constants.Msg.LoginSucc;
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 response.message = ex.Message;
             }

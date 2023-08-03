@@ -16,19 +16,11 @@ namespace MyWebApp.Web.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IProgramService _programService;
-        private readonly IParameterService _parameterService;
         private readonly ILoginService _loginService;
-        private readonly IUserService _userService;
         private readonly IHttpContextAccessor _contextAccessor;
-        Common common = new Common();
 
-        public HomeController(IParameterService parameterService, IProgramService programService, IUserService userService,
-            ILoginService loginService, IHttpContextAccessor contextAccessor)
+        public HomeController(ILoginService loginService, IHttpContextAccessor contextAccessor)
         {
-            _userService = userService;
-            _parameterService = parameterService;
-            _programService = programService;
             _loginService = loginService;
             _contextAccessor = contextAccessor;
         }

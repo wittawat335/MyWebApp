@@ -37,18 +37,12 @@ namespace MyWebApp.Infrastructure.Repositories
         {           
             try
             {
-                using (var connection =
-                  _dapperContext.CreateConnection())
+                using (var connection = _dapperContext.CreateConnection())
                 {
-                    var procedure = "SP_GET_MENU_BY_ROLE_TEST";
+                    var procedure = "SP_GET_MENU_BY_ROLE";
                     var parameters = new DynamicParameters
                         (new { UserRole = role});
-                    var results = await connection
-                        .QueryAsync<ProgramDTO>(
-                        procedure,
-                        parameters,
-                        commandType: CommandType.StoredProcedure);
-
+                    var results = await connection.QueryAsync<ProgramDTO>(procedure, parameters, commandType: CommandType.StoredProcedure);
                     return results.ToList();
                 }
             }
@@ -62,17 +56,12 @@ namespace MyWebApp.Infrastructure.Repositories
         {
             try
             {
-                using (var connection =
-                  _dapperContext.CreateConnection())
+                using (var connection = _dapperContext.CreateConnection())
                 {
                     var procedure = "SP_GET_MENU_DEFAULT";
                     var parameters = new DynamicParameters
                         (new { ROLE_CODE = code });
-                    var results = await connection
-                        .QueryFirstAsync<string>(
-                        procedure,
-                        parameters,
-                        commandType: CommandType.StoredProcedure);
+                    var results = await connection.QueryFirstAsync<string>(procedure, parameters, commandType: CommandType.StoredProcedure);
 
                     return results;
                 }
