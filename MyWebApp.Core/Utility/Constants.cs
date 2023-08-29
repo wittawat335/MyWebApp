@@ -34,6 +34,18 @@ namespace MyWebApp.Core.Utility
             public const string Client_URL = "AppSettings:Client_URL";
         }
 
+        public struct DatabaseSetting
+        {
+            public struct SqlServer
+            {
+                public const string DBServer = "DatabaseSetting:SqlServer:DBServer";
+                public const string DBPort = "DatabaseSetting:SqlServer:DBPort";
+                public const string DBUser = "DatabaseSetting:SqlServer:DBUser";
+                public const string DBPassword = "DatabaseSetting:SqlServer:DBPassword";
+                public const string DatabaseName = "DatabaseSetting:SqlServer:DatabaseName";
+            }
+        }
+
         public struct ConnnectionString
         {
             public const string SqlServer = "SQL";

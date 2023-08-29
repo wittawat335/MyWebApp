@@ -15,8 +15,8 @@ namespace MyWebApp.Web.Components
         private readonly IMapper _mapper;
 
         public NavMenuViewComponent(
-            IProgramService programService, 
-            IHttpContextAccessor contextAccessor, 
+            IProgramService programService,
+            IHttpContextAccessor contextAccessor,
             IMapper mapper)
         {
             _programService = programService;
@@ -30,16 +30,14 @@ namespace MyWebApp.Web.Components
             var logInInfo = new LoginInfo();
             var code = "";
             try
-            {          
+            {
                 string sessionString = HttpContext.Session.GetString(Constants.SessionKey.LoginInfo);
-                if (sessionString != null) 
+                if (sessionString != null)
                     logInInfo = JsonConvert.DeserializeObject<LoginInfo>(sessionString);
 
                 if (logInInfo.Role != null)
-                    code = logInInfo.Role;               
-                else
-                    code = "MA";
-                
+                    code = logInInfo.Role;
+
                 menu = await _programService.GetByRoleAsync(code);
 
                 return View(menu);
