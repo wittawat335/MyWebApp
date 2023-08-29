@@ -1,28 +1,23 @@
-using MyWebApp.Infrastructure.DBContext;
 using MyWebApp.Infrastructure;
 using MyWebApp.Core;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Mvc.Razor;
-using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.InjectDependence(builder.Configuration); // Infrastructure Config
 builder.Services.RegisterServices(); //Core Config
-builder.Services.AddAuthentication(
-    CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(option => {
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option => {
         option.LoginPath = "/Home/Login";
         option.ExpireTimeSpan = TimeSpan.FromMinutes(15);
-
     });
+
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.Name = "AspNetCore.Identity.Application";
     options.ExpireTimeSpan = TimeSpan.FromMinutes(15);
     options.SlidingExpiration = true;
 }); // test
+
 #region Session
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>(); //Session
 builder.Services.AddDistributedMemoryCache();

@@ -18,20 +18,35 @@ namespace MyWebApp.Web.Controllers
     {
         private readonly ILoginService _loginService;
         private readonly IHttpContextAccessor _contextAccessor;
+        private readonly IWebHostEnvironment _environment;
 
-        public HomeController(ILoginService loginService, IHttpContextAccessor contextAccessor)
+        public HomeController(ILoginService loginService, IHttpContextAccessor contextAccessor, IWebHostEnvironment environment)
         {
             _loginService = loginService;
             _contextAccessor = contextAccessor;
+            _environment = environment;
         }
+
+        public IActionResult CheckEnvironment()
+        {
+            return Content("Environment : " + _environment.EnvironmentName);
+        }
+
         [Authorize]
         public IActionResult Index()
         {
+            var sessionLogin = _contextAccessor.HttpContext.Session.GetString(Constants.SessionKey.LoginInfo);
+            if (sessionLogin == null)
+                return RedirectToAction("Login");
+
             return View();
         }
         public IActionResult Login()
         {
-            ClaimsPrincipal claimUser = HttpContext.User;
+
+            var sessionLogin = _contextAccessor.HttpContext.Session.GetString(Constants.SessionKey.LoginInfo);
+            if (sessionLogin != null)
+                return RedirectToAction("Index");
 
             return View();
         }
@@ -59,7 +74,7 @@ namespace MyWebApp.Web.Controllers
 
             return new JsonResult(response);
         }
-      
+
         [HttpPost]
         public async Task<IActionResult> SelectRole(string role)
         {
