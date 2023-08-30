@@ -1,17 +1,18 @@
-# ASP.NET CORE Clean Architecture
-# Language Programming
+# ASP.NET CORE MVC Clean Architecture
 # FrontEnd
 - Razor View
 - C#
 - Html
 - CSS
 - JavaScript (Jquery)
+- Ajex
 - Json
 # BackEnd
 - C#
 - LINQ
   
 # Database Tool
+- Dapper
 - SQL Sever 2019
 - Store Procedure
   
