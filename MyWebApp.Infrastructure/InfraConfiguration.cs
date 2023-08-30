@@ -5,6 +5,7 @@ using MyWebApp.Core.Domain.RepositoryContracts;
 using MyWebApp.Core.Utility;
 using MyWebApp.Infrastructure.DBContext;
 using MyWebApp.Infrastructure.Repositories;
+using System.Runtime.CompilerServices;
 
 namespace MyWebApp.Infrastructure
 {
@@ -12,17 +13,31 @@ namespace MyWebApp.Infrastructure
     {
         public static void InjectDependence(this IServiceCollection services, IConfiguration configuration)
         {
-            var server = configuration[Constants.DatabaseSetting.SqlServer.DBServer];
-            var port = configuration[Constants.DatabaseSetting.SqlServer.DBPort] ?? "5655";
-            var databaseName = configuration[Constants.DatabaseSetting.SqlServer.DatabaseName];
-            var user = configuration[Constants.DatabaseSetting.SqlServer.DBUser];
-            var password = configuration[Constants.DatabaseSetting.SqlServer.DBPassword];
-            var connectionString =
-                $"Server={server};" +
-                $"Database={databaseName};" +
-                $"User ID={user};" +
-                $"Password={password};" +
-                $"TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=True;";
+            var connectionString = "";
+            var server =
+                Environment.GetEnvironmentVariable("DB_HOST") ?? configuration[Constants.DatabaseSetting.SqlServer.DBServer];
+            var port =
+                Environment.GetEnvironmentVariable("DB_POST") ?? "";
+            var databaseName =
+                Environment.GetEnvironmentVariable("DB_NAME") ?? configuration[Constants.DatabaseSetting.SqlServer.DatabaseName];
+            var user =
+                configuration[Constants.DatabaseSetting.SqlServer.DBUser] ?? "sa";
+            var password =
+                Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? configuration[Constants.DatabaseSetting.SqlServer.DBPassword];
+
+            if (port != "")
+                connectionString =
+                    $"Server={server},{port};" +
+                    $"Database={databaseName};" +
+                    $"User ID={user};" +
+                    $"Password={password};" +
+                    $"TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=True;";
+            else connectionString =
+                    $"Server={server};" +
+                    $"Database={databaseName};" +
+                    $"User ID={user};" +
+                    $"Password={password};" +
+                    $"TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=True;";
 
             //DBConnection
             services.AddSingleton<DapperContext>(); // Dapper

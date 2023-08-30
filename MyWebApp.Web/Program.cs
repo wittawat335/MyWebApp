@@ -6,10 +6,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.InjectDependence(builder.Configuration); // Infrastructure Config
 builder.Services.RegisterServices(); //Core Config
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option => {
-        option.LoginPath = "/Home/Login";
-        option.ExpireTimeSpan = TimeSpan.FromMinutes(15);
-    });
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(option =>
+{
+    option.LoginPath = "/Home/Login";
+    option.ExpireTimeSpan = TimeSpan.FromMinutes(15);
+});
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
