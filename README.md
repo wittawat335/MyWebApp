@@ -1,5 +1,4 @@
 # ASP.NET CORE MVC Clean Architecture
-# Language Programming
 # FrontEnd
 - Razor View
 - C#
