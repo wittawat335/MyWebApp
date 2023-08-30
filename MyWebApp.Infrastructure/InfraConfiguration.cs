@@ -12,8 +12,8 @@ namespace MyWebApp.Infrastructure
     {
         public static void InjectDependence(this IServiceCollection services, IConfiguration configuration)
         {
-            //var port = configuration["DatabaseSetting:SqlServer:DBPort"] ?? "5655";
             var server = configuration[Constants.DatabaseSetting.SqlServer.DBServer];
+            var port = configuration[Constants.DatabaseSetting.SqlServer.DBPort] ?? "5655";
             var databaseName = configuration[Constants.DatabaseSetting.SqlServer.DatabaseName];
             var user = configuration[Constants.DatabaseSetting.SqlServer.DBUser];
             var password = configuration[Constants.DatabaseSetting.SqlServer.DBPassword];
