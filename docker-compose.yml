@@ -1,0 +1,35 @@
+version: '3.4'
+
+networks:
+  mywebapp:
+
+services:
+  ms-sql-server:
+    # container_name: webapp-db
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    ports:
+      - 1433:1433
+    environment:
+      ACCEPT_EULA: "Y"
+      SA_PASSWORD: "P@ssw0rd"
+      MSSQL_PID: Express
+    networks:
+      - mywebapp
+
+  mywebapp.web:
+    image: ${DOCKER_REGISTRY-}mywebappweb
+    build:
+      context: .
+      dockerfile: MyWebApp.Web/Dockerfile
+    ports:
+      - 8080:80
+    depends_on:
+      - ms-sql-server
+    environment:
+      - DB_HOST=ms-sql-server
+      - DB_POST=1433
+      - DB_NAME=NCLS_SIT
+      - DB_SA_PASSWORD=P@ssw0rd
+    networks:
+      - mywebapp
+  

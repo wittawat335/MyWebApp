@@ -17,7 +17,7 @@ namespace MyWebApp.Infrastructure
             var server =
                 Environment.GetEnvironmentVariable("DB_HOST") ?? configuration[Constants.DatabaseSetting.SqlServer.DBServer];
             var port =
-                Environment.GetEnvironmentVariable("DB_POST") ?? "";
+                Environment.GetEnvironmentVariable("DB_POST") ?? "1433";
             var databaseName =
                 Environment.GetEnvironmentVariable("DB_NAME") ?? configuration[Constants.DatabaseSetting.SqlServer.DatabaseName];
             var user =
@@ -31,7 +31,7 @@ namespace MyWebApp.Infrastructure
                     $"Database={databaseName};" +
                     $"User ID={user};" +
                     $"Password={password};" +
-                    $"TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=True;";
+                    $"TrustServerCertificate=True;Trusted_Connection=false;MultipleActiveResultSets=True;";
             else connectionString =
                     $"Server={server};" +
                     $"Database={databaseName};" +
