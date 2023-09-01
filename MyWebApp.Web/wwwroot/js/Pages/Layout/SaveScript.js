@@ -17,7 +17,7 @@ function Save(formId, urlAction) {
                 GetList();
             }
             else {
-                swalMessage('error', result.message);
+                Swal.fire(response.message);
             }
         });
     }

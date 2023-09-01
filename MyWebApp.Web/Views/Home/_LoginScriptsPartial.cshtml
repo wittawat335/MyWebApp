@@ -50,7 +50,7 @@
                     }
                 }
                 else {
-                    swalMessage('error', response.message)
+                    Swal.fire(response.message);
                 }
             });
         }       
@@ -68,7 +68,7 @@
                 window.location.href = response.url;
             }
             else {
-                swalMessage('error', response.message);
+                Swal.fire(response.message);
             }
         });
     }

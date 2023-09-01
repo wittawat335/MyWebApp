@@ -19,17 +19,24 @@ namespace MyWebApp.Web.Controllers
         private readonly ILoginService _loginService;
         private readonly IHttpContextAccessor _contextAccessor;
         private readonly IWebHostEnvironment _environment;
+        private readonly IConfiguration _configuration;
 
-        public HomeController(ILoginService loginService, IHttpContextAccessor contextAccessor, IWebHostEnvironment environment)
+        public HomeController(ILoginService loginService, IHttpContextAccessor contextAccessor, IWebHostEnvironment environment, IConfiguration configuration)
         {
             _loginService = loginService;
             _contextAccessor = contextAccessor;
             _environment = environment;
+            _configuration = configuration;
         }
 
         public IActionResult CheckEnvironment()
         {
             return Content("Environment : " + _environment.EnvironmentName);
+        }
+
+        public IActionResult CheckConnectionString()
+        {
+            return Content("ConnectionString : " + _configuration.GetConnectionString(Constants.ConnnectionString.SqlServer));
         }
 
         [Authorize]

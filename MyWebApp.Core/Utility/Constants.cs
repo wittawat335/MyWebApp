@@ -48,7 +48,7 @@ namespace MyWebApp.Core.Utility
 
         public struct ConnnectionString
         {
-            public const string SqlServer = "SQL";
+            public const string SqlServer = "SqlServer";
             public const string SqlServerToAzure = "SqlServerToAzure";
         }
         public struct StatusMessage

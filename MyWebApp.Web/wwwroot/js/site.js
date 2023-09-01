@@ -80,7 +80,9 @@ function confirmMessage(message) {
 }
 
 function modalPOST(caption, controller, action, data, isFull, med) {
+    alert(root);
     var url = '/' + controller + '/' + action;
+    alert(url);
     $.post(url, data, function (result) {
         $('#modalDialog > .modal-dialog > .modal-content > .modal-body').html(result);
         showModal(caption, isFull);
@@ -241,21 +243,7 @@ function SetReq(div, x) {
         $('#' + div).closest('div.form-group').removeClass('has-error has-danger');
     }
 }
-//function setRole(roleCode) {
-//    var url = urlSelectRole;
-//    var data = { "role": roleCode };
-//    $.post(url, data, function (result) {
-//        if (response.status) {
-//            alert('1');
-//            alert(response.url);
-//            swalMessage('success', response.message);
-//            window.location.href = response.url;
-//        }
-//        else {
-//            swalMessage('error', response.message);
-//        }
-//    });
-//}
+
 
 /*
  * This combined file was created by the DataTables downloader builder:
@@ -16669,7 +16657,7 @@ function Save(formId, urlAction) {
                 GetList();
             }
             else {
-                swalMessage('error', result.message);
+                Swal.fire(response.message);
             }
         });
     }

@@ -11,37 +11,55 @@ namespace MyWebApp.Infrastructure
 {
     public static class InfraConfiguration
     {
-        public static void InjectDependence(this IServiceCollection services, IConfiguration configuration)
+        public static void InjectDependence(this IServiceCollection services, IConfiguration configuration, string envName)
         {
             var connectionString = "";
-            var server =
-                Environment.GetEnvironmentVariable("DB_HOST") ?? configuration[Constants.DatabaseSetting.SqlServer.DBServer];
-            var port =
-                Environment.GetEnvironmentVariable("DB_POST") ?? "1433";
-            var databaseName =
-                Environment.GetEnvironmentVariable("DB_NAME") ?? configuration[Constants.DatabaseSetting.SqlServer.DatabaseName];
-            var user =
-                configuration[Constants.DatabaseSetting.SqlServer.DBUser] ?? "sa";
-            var password =
-                Environment.GetEnvironmentVariable("DB_SA_PASSWORD") ?? configuration[Constants.DatabaseSetting.SqlServer.DBPassword];
+            var server = "";
+            var port = "";
+            var databaseName = "";
+            var user = "";
+            var password = "";
 
-            if (port != "")
-                connectionString =
-                    $"Server={server},{port};" +
-                    $"Database={databaseName};" +
-                    $"User ID={user};" +
-                    $"Password={password};" +
-                    $"TrustServerCertificate=True;Trusted_Connection=false;MultipleActiveResultSets=True;";
-            else connectionString =
-                    $"Server={server};" +
-                    $"Database={databaseName};" +
-                    $"User ID={user};" +
-                    $"Password={password};" +
-                    $"TrustServerCertificate=True;Trusted_Connection=True;MultipleActiveResultSets=True;";
+            switch (envName)
+            {
+                case "Development":
+                    connectionString = configuration.GetConnectionString(Constants.ConnnectionString.SqlServer);
+                    break;
+
+                case "Staging":
+                    server = Environment.GetEnvironmentVariable("DB_HOST");
+                    port = Environment.GetEnvironmentVariable("DB_POST") ?? "1433";
+                    databaseName = Environment.GetEnvironmentVariable("DB_NAME");
+                    user = Environment.GetEnvironmentVariable("DB_USER") ?? "sa";
+                    password = Environment.GetEnvironmentVariable("DB_SA_PASSWORD");
+                    connectionString =
+                        $"Server={server},{port};" +
+                        $"Database={databaseName};" +
+                        $"User ID={user};" +
+                        $"Password={password};" +
+                        $"TrustServerCertificate=True;Trusted_Connection=false;MultipleActiveResultSets=True;";
+                    break;
+
+                case "Production":
+                    connectionString = configuration.GetConnectionString(Constants.ConnnectionString.SqlServer);
+                    break;
+            }
 
             //DBConnection
-            services.AddSingleton<DapperContext>(); // Dapper
             services.AddDbContext<NCLS_SITContext>(opt => opt.UseSqlServer(connectionString));
+            //services.AddDbContext<NCLS_SITContext>(opt =>
+            //{
+            //    opt.UseSqlServer(connectionString,
+            //        sqlServerOptionsAction: sqlOptions =>
+            //        {
+            //            sqlOptions.EnableRetryOnFailure(
+            //            maxRetryCount: 10,
+            //            maxRetryDelay: TimeSpan.FromSeconds(30),
+            //            errorNumbersToAdd: null);
+            //        });
+            //});
+            services.AddSingleton<DapperContext>(); // Dapper
+
 
             services.AddTransient(typeof(IGenericRepository<>), typeof(GenericRepository<>));
             services.AddScoped<IProgramRepository, ProgramRepository>();
