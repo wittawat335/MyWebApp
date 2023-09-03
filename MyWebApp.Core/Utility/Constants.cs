@@ -666,6 +666,8 @@ namespace MyWebApp.Core.Utility
             public static string PathDownloadTemplateTrackingNote = "~/TempFiles/ReceiveCarTemplate.xls";
             public static string DownloadTemplateTrackingNote = "~/ReceiveCar/GetExcelFile";
             public static string Calculate = "~/ReceiveCar/Calculate";
+            public static string ReceiveCarGetList = "~/ReceiveCar/GetList";
+            public static string ReceiveCar_popUpUpload = "~/ReceiveCar/_popUpUpload";
 
             //Master
             public static string MasterIndex = "~/Master/Index";
@@ -676,6 +678,9 @@ namespace MyWebApp.Core.Utility
 
             //Program
             public static string ProgramSave = "~/Program/Save";
+            public static string ProgramGetList = "~/Program/GetList";
+            public static string ProgramDetail = "~/Program/Detail";
+            public static string ProgramDelete = "~/Program/Delete";
 
             //Bucket
             public static string BucketSerach = "~/Bucket/_Search";
@@ -697,6 +702,7 @@ namespace MyWebApp.Core.Utility
             public static string UserDelete = "~/User/Delete";
             public static string UserGetList = "~/User/GetList";
             public static string UserSerachAD = "~/User/SearchAD";
+            public static string UserDetail = "~/User/_Detail";
 
             //Doc
             public static string DocIndex = "~/Document/Index";
@@ -715,6 +721,8 @@ namespace MyWebApp.Core.Utility
 
             //Role
             public static string RoleSerach = "~/Role/_Search";
+            public static string Role_Detail = "~/Role/_Detail";
+            public static string Role_DetailsPermission = "~/Role/_DetailsPermission";
             public static string RoleSave = "~/Role/Save";
             public static string RoleIndex = "~/Role/Index";
             public static string RoleSearchPermission = "~/Role/GetJsTree";
@@ -765,8 +773,11 @@ namespace MyWebApp.Core.Utility
             public static string LegalStatusSaveStatus = "~/LegalStatus/SaveStatus";
 
             //To do list
+            public static string TodoListGetList = "~/TodoList/GetList";
             public static string TodoListsearchRefNo = "~/TodoList/searchRefNo";
             public static string TodoListsearchCustomer = "~/TodoList/searchCustomer";
+            public static string TodoListsearchAdmin = "~/TodoList/searchAdmin";
+            public static string TodoListsearchOa = "~/TodoList/searchOa";
             public static string TodoListsearchLegalStatus = "~/TodoList/_ddlStatus";
             public static string TodoListSearchDefault = "~/TodoList/_SearchDefault";
             public static string TodoListSearch = "~/TodoList/_Search";

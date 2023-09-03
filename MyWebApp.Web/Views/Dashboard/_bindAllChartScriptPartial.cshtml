@@ -1,9 +1,9 @@
 ﻿<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.bundle.min.js"></script>
 <script>
     $(document).ready(function () {
-        $('#Chart1').load("/Dashboard/_ChartsR3")
-        $('#Chart2').load("/Dashboard/_ChartsRepo")
-        $('#Chart3').load("/Dashboard/_ChartsLegal")
-        $('#Chart4').load("/Dashboard/_ChartsLegalStatus")
+        $('#Chart1').load("@Url.Content("~/Dashboard/_ChartsR3")")
+        $('#Chart2').load("@Url.Content("~/Dashboard/_ChartsRepo")")
+        $('#Chart3').load("@Url.Content("~/Dashboard/_ChartsLegal")")
+        $('#Chart4').load("@Url.Content("~/Dashboard/_ChartsLegalStatus")")
     });
 </script>

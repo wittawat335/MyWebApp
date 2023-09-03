@@ -80,9 +80,15 @@ function confirmMessage(message) {
 }
 
 function modalPOST(caption, controller, action, data, isFull, med) {
-    alert(root);
     var url = '/' + controller + '/' + action;
-    alert(url);
+    $.post(url, data, function (result) {
+        $('#modalDialog > .modal-dialog > .modal-content > .modal-body').html(result);
+        showModal(caption, isFull);
+    });
+}
+
+function modalPOSTV2(caption, path, data, isFull) {
+    var url = path;
     $.post(url, data, function (result) {
         $('#modalDialog > .modal-dialog > .modal-content > .modal-body').html(result);
         showModal(caption, isFull);

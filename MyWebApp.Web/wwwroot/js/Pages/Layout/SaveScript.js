@@ -1,4 +1,14 @@
-﻿var formId = '';
+﻿function setValidateById(id) {
+    var result = false;
+    if ($('#' + id).val() == '') {
+        $('#' + id).css("border-color", "red");
+        result = true;
+    }
+
+    return result;
+}
+
+var formId = '';
 var urlAction = '';
 function Save(formId, urlAction) {
     if (formId == '')

@@ -104,8 +104,8 @@
 </div>
 
 @section Scripts{
-    <script src="~/js/pages/receivecar/datatable.js"></script>
     @{
+        await Html.RenderPartialAsync("_DataTableScript");
         await Html.RenderPartialAsync("_ExportExcelPartialScript");
     }
 }

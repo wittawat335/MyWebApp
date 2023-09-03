@@ -127,14 +127,9 @@
             ]
         });
     }
+
     function PopupDetail(code, action) {
         var data = { "code": code, "action": action };
-        modalPOST(action + " " + "Master", "Master", "_Detail", data, 50);
+        modalPOSTV2(action, "@Url.Content(Constants.urlAction.MasterDetail)", data, 50);
     };
-
-
-
-
-
-
 </script>

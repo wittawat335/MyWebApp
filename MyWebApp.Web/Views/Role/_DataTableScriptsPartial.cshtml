@@ -115,11 +115,11 @@
     }
     function PopupDetail(code, action) {
         var data = { "code": code, "action": action };
-        modalPOST(action + " " + "Role", "Role", "_Detail", data, 50);
+        modalPOSTV2(action, "@Url.Content(Constants.urlAction.Role_Detail)", data, 50);
     };
     function PopupDetailPermission(code, action) {
         var data = { "code": code, "action": action };
-        modalPOST(action , "Role", "_DetailsPermission", data, 50);
+        modalPOSTV2(action, "@Url.Content(Constants.urlAction.Role_DetailsPermission)", data, 50);
     };
 </script>
 
