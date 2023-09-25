@@ -164,33 +164,17 @@ namespace MyWebApp.Core.Services
                 var updateProgram = await _programRepository.Get(x => x.PROG_CODE == model.PROG_CODE);
                 if (updateProgram != null)
                 {
-                    if (model.PROG_STATUS != updateProgram.PROG_STATUS)
+                    if (model.PROG_STATUS == Constants.Status.Inactive)
                     {
-                        var updatePerMission = await _perRepository.GetAll(x => x.PERM_PROG_CODE == model.PROG_CODE);
-                        var updateAction = await _actRepository.GetAll(x => x.ACT_PROG_CODE == model.PROG_CODE);
-                        if (updatePerMission.ToList().Count() > 0) //Update Status M_PERMISSION
-                        {
-                            foreach (var item in updatePerMission) 
-                            {
-                                item.PERM_STATUS = model.PROG_STATUS;
-                                item.PERM_UPDATE_BY = model.PROG_UPDATE_BY;
-                                item.PERM_UPDATE_DATE = model.PROG_UPDATE_DATE;
+                        var listPermission = await _perRepository.GetAll(x => x.PERM_PROG_CODE == model.PROG_CODE);
+                        var listAction = await _actRepository.GetAll(x => x.ACT_PROG_CODE == model.PROG_CODE);
 
-                                await _perRepository.Update(item);
-                            }
-                        }
-                        if (updateAction.ToList().Count() > 0) //Update Status M_ACTION
-                        {
-                            foreach (var item in updateAction)
-                            {
-                                item.ACT_STATUS = model.PROG_STATUS;
-                                item.ACT_UPDATE_BY = model.PROG_UPDATE_BY;
-                                item.ACT_UPDATE_DATE = model.PROG_UPDATE_DATE;
-
-                                await _actRepository.Update(item);
-                            }
-                        }
+                        if (listPermission.ToList().Count() > 0)
+                            await _perRepository.DeleteList(listPermission.ToList());
+                        //if (listAction.ToList().Count() > 0)
+                        //    await _actRepository.DeleteList(listAction.ToList());
                     }
+
                     result = await _programRepository.Update(_mapper.Map(model, updateProgram));
                 }
 

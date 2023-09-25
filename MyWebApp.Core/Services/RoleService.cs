@@ -32,6 +32,7 @@ namespace MyWebApp.Core.Services
             _permissionService = permissionService;
             _contextAccessor = contextAccessor;
         }
+        private string progCode;
         public Response<List<DataPermissionJsonInsertList>> GetListPermission(List<DataPermissionJsonInsertList> permissionData)
         {
             var response = new Response<List<DataPermissionJsonInsertList>>();
@@ -250,10 +251,10 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                var query = await _perRepository.GetAll(x => x.PERM_ROLE_CODE == code);               
-                if(query.ToList().Count() > 0)
+                var query = await _perRepository.GetAll(x => x.PERM_ROLE_CODE == code);
+                if (query.ToList().Count() > 0)
                     await _perRepository.DeleteList(query.ToList());
-               
+
                 return true;
             }
             catch
@@ -265,7 +266,7 @@ namespace MyWebApp.Core.Services
         {
             try
             {
-                return await _repository.Get(x => x.ROLE_CODE == code); 
+                return await _repository.Get(x => x.ROLE_CODE == code);
             }
             catch
             {
@@ -299,9 +300,7 @@ namespace MyWebApp.Core.Services
         }
         public async Task<bool> Childrenlist(string roleCode, List<DataPermissionJsonInsertList> model)
         {
-            string progCode = "";
             bool result = false;
-            
             try
             {
                 foreach (DataPermissionJsonInsertList list in model)
@@ -311,7 +310,7 @@ namespace MyWebApp.Core.Services
                         progCode = list.id;
                         await Childrenlist(roleCode, list.children);
                     }
-                    else 
+                    else
                     {
                         if (list.state.selected)
                         {

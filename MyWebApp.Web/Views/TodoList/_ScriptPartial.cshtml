@@ -109,7 +109,7 @@
                 {
                     data: 'JOB_OS_AMT_COL',
                     render: function (data, type, row, meta) {
-                        if (data === null) return "";
+                        if (row.joB_OS_AMT_COL === null) return "";
                         return commaSeparateNumber(row.joB_OS_AMT_COL);
                     }
                 },
