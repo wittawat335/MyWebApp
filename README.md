@@ -10,3 +10,7 @@ Web application ตัวนี้ถอดบางส่วนมาจาก�
 - Dapper
 - SQL Sever 2019
 - Store Procedure
+
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
