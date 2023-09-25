@@ -1,4 +1,6 @@
 # ASP.NET CORE MVC 
+Web application ตัวนี้ถอดบางส่วนมาจากผลงานที่เคยทำ เป็นระบบติดตามทวงหนี้ของระบบไฟแนนซ์
+
 # FrontEnd
 - Razor View
 - C#
