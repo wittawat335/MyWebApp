@@ -1,34 +1,16 @@
-# ASP.NET CORE MVC Clean Architecture
-# FrontEnd
-- Razor View
-- C#
-- Html
-- CSS
-- JavaScript (Jquery)
-- Ajex
-- Json
-# BackEnd
-- C#
-- LINQ
-  
+# ASP.NET CORE MVC 
+Web application ตัวนี้ถอดบางส่วนมาจากผลงานที่เคยทำ เป็นระบบติดตามทวงหนี้ของไฟแนนซ์ ซึ่งผู้ใช้งานระบบสามารถติดตามงาน ทวงถามหนี้ ยึดทรัพย์สิน ส่งจดหมายเตือน รวมทั้งหมายทางด้านกฏหมายต่างๆ
+## Tech Stack
+
+**Client:** Html, CSS, JavaScript (Jquery)
+
+**Server:** C#
+
 # Database Tool
 - Dapper
 - SQL Sever 2019
 - Store Procedure
-  
-# Using Package
-- AutoMapper
-- AutoMapper.Extensions.Microsoft.DependencyInjection
-- Dapper
-- Microsoft.EntityFrameworkCore
-- Microsoft.EntityFrameworkCore.SqlServer
-- Microsoft.EntityFrameworkCore.Tools
-- Microsoft.Data.SqlClient
-- Microsoft.VisualStudio.Web.CodeGeneration.Design
-- EPPlus
-- Newtonsoft.Json
-- Microsoft.AspNetCore.Session
-- Microsoft.AspNetCore.Authentication.Cookies
-- System.DirectoryServices
-- System.DirectoryServices.Protocols
-- BuildBundlerMinifier
+
+## Screenshots
+
+![App Screenshot](https://via.placeholder.com/468x300?text=App+Screenshot+Here)
