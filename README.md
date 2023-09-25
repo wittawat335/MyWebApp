@@ -4,7 +4,7 @@ Web application ตัวนี้ถอดบางส่วนมาจาก�
 
 **Client:** Html, CSS, JavaScript (Jquery)
 
-**Server:** C#, Express
+**Server:** C#
 
 # Database Tool
 - Dapper
